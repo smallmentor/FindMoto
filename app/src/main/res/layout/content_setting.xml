@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".MenuActivity"
+    tools:showIn="@layout/app_bar_menu"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="如果您感到訊號或尋車功能已經不準確，可能是裝置電量較低造成的不穩定狀況，請用此功能來重新矯正合適的訊號。"/>
+
+    <TableRow>
+        <Button
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="更改預設裝置"
+            android:id="@+id/btnGotoList_setting"/>
+
+        <Button
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="開始矯正"
+            android:id="@+id/btnStartCorrection"/>
+    </TableRow>
+</TableLayout>
