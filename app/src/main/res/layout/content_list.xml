@@ -15,6 +15,7 @@
         android:text="您的裝置"/>
 
     <ListView
+        android:id="@+id/deviceList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
