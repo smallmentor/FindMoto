@@ -1,13 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CorrectionActivity">
+    tools:context=".CorrectionActivity"
+    android:orientation="vertical"
+    android:background="@color/colorBackground">
+
+    <TableRow android:layout_width="match_parent">
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="第一次"
+            android:textColor="@color/colorContentText"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="第二次"
+            android:textColor="@color/colorContentText"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="第三次"
+            android:textColor="@color/colorContentText"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="第四次"
+            android:textColor="@color/colorContentText"
+            android:textSize="20sp" />
+    </TableRow>
+
+    <TableRow android:layout_width="match_parent">
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="-80dbm"
+            android:textColor="@color/colorContentText"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="-76dbm"
+            android:textColor="@color/colorContentText"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="未紀錄"
+            android:textColor="#b60000"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="未紀錄"
+            android:textColor="#b60000"
+            android:textSize="20sp" />
+    </TableRow>
+
+    <TableRow>
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_weight="4"
+            android:layout_height="29dp"
+            android:max="100"
+            android:minHeight="10dp"
+            android:progress="50"
+            android:progressTint="@color/colorPrimary" />
+    </TableRow>
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="正在矯正的頁面"/>
+        android:text="目前選擇：我的摩托車"/>
 
-</android.support.constraint.ConstraintLayout>
+    <TableLayout>
+        <TableRow>
+            <Button
+                android:text="取消紀錄"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="26sp" />
+            <Button
+                android:text="下個記錄"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="26sp"/>
+        </TableRow>
+
+
+    </TableLayout>
+
+</TableLayout>

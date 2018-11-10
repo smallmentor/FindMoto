@@ -1,0 +1,29 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical"
+	android:weightSum="1920">
+
+	<TextView
+		android:id="@+id/textView"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_weight="120"
+		android:background="@color/colorBackground"
+		android:gravity="center"
+		android:text="以下為附近掃瞄到的 iBeacon"
+		android:textColor="@color/colorContentText" />
+
+	<ListView
+		android:id="@+id/beacon_list"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_weight="1800"
+		android:background="@color/colorBackground"
+		android:divider="@color/colorContentText"
+		android:dividerHeight="2dp"
+		android:paddingLeft="10dp"
+		android:paddingRight="10dp"
+		android:scrollbars="vertical" />
+
+</LinearLayout>

@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MenuActivity">
+    tools:context=".MenuActivity"
+    android:id="@+id/app_bar_start">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -15,18 +16,23 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/colorTitleBackground"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
 
-    <include android:id="@+id/contentStart"
+    <include
+        android:id="@+id/contentStart"
         layout="@layout/content_start"
-        android:visibility="visible"/>
-    <include android:id="@+id/contentList"
+        android:visibility="visible" />
+
+    <include
+        android:id="@+id/contentList"
         layout="@layout/content_list"
         android:visibility="gone"/>
-    <include android:id="@+id/contentSetting"
+
+    <include
+        android:id="@+id/contentSetting"
         layout="@layout/content_setting"
         android:visibility="gone"/>
 
