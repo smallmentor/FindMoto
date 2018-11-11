@@ -6,4 +6,7 @@
     <color name="colorBackground">#FFFFC2</color>
     <color name="colorTitleBackground">#3268D4</color>
     <color name="colorContentText">#544524</color>
+    <color name="colorError">#931210</color>
+    <color name="colorTrue">#37e83c</color>
+
 </resources>

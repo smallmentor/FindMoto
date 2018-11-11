@@ -88,9 +88,9 @@ public class UIMain extends Activity implements iBeaconScanManager.OniBeaconScan
 	
 	USBeaconList mUSBList		= null;
 	
-	ListView mLVBLE= null;
+	ListView beaconList = null;
 	
-	BLEListAdapter mListAdapter		= null;
+	BLEListAdapter listAdapter = null;
 	
 	List<ScanediBeacon> miBeacons	= new ArrayList<ScanediBeacon>();    // a beacon list
 	
@@ -112,12 +112,12 @@ public class UIMain extends Activity implements iBeaconScanManager.OniBeaconScan
 					}
 					break;
 
-                // Update the beacon list on the phone screen.
+                // 更新裝置清單
 				case MSG_UPDATE_BEACON_LIST:
-					synchronized(mListAdapter)
+					synchronized(listAdapter)
 					{
 						verifyiBeacons();
-						mListAdapter.notifyDataSetChanged();
+						listAdapter.notifyDataSetChanged();
 						mHandler.sendEmptyMessageDelayed(MSG_UPDATE_BEACON_LIST, 500);
 					}
 					break;
@@ -212,26 +212,26 @@ public class UIMain extends Activity implements iBeaconScanManager.OniBeaconScan
         db.execSQL(createTable);
 
 		requestStoragePermission();
-		Log.d("debug","2");
+
 		/** create instance of iBeaconScanManager. */
 		miScaner		= new iBeaconScanManager(this, this);
 		
-		mListAdapter	= new BLEListAdapter(this);
+		listAdapter 	= new BLEListAdapter(this);
 		
-		mLVBLE			= findViewById(R.id.beacon_list);
-		mLVBLE.setAdapter(mListAdapter);
+		beaconList 		= findViewById(R.id.beacon_list);
+		beaconList.setAdapter(listAdapter);
 
-		mLVBLE.setOnItemClickListener(listViewNoItemClick);
+		beaconList.setOnItemClickListener(listViewNoItemClick);
 		Log.d("debug","3");
-		//Check the BT is on or off on the phone.
+		//確認藍芽是否開啟
 		if(!mBLEAdapter.isEnabled())
 		{
 			Intent intent= new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-			startActivityForResult(intent, REQ_ENABLE_BT);   // A request for open Bluetooth
+			startActivityForResult(intent, REQ_ENABLE_BT);   // 要求開啟藍芽
 		}
 		else
 		{
-		    // Start scan if BT is opened
+		    // 如果已經開啟藍芽就開始搜尋
 			Message msg= Message.obtain(mHandler, MSG_SCAN_IBEACON, 1000, 1100);
 			msg.sendToTarget();
 		}
@@ -246,49 +246,49 @@ public class UIMain extends Activity implements iBeaconScanManager.OniBeaconScan
 			}
 		}
 		
-		/** check network is available or not. */
-		ConnectivityManager cm	= (ConnectivityManager)getSystemService(UIMain.CONNECTIVITY_SERVICE);
-		if(null != cm)
-		{
-			NetworkInfo ni = cm.getActiveNetworkInfo();
-			if(null == ni || (!ni.isConnected()))
-			{
-				dlgNetworkNotAvailable();     //Show a dialog to inform users to enable  the network.
-			}
-			else
-			{
-				THLLog.d("debug", "NI not null");
-
-				NetworkInfo niMobile= cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-				if(null != niMobile)
-				{
-					boolean isMobileInt	= niMobile.isConnectedOrConnecting();
-					
-					if(isMobileInt)
-					{
-						dlgNetworkMobile();  //Show a dialog to make sure to use the Mobile Internet
-					}
-					else
-					{
-						USBeaconServerInfo info= new USBeaconServerInfo();
-						
-						info.serverUrl		= HTTP_API;
-						info.queryUuid		= QUERY_UUID;
-						info.downloadPath	= STORE_PATH;
-						
-						mBServer.setServerInfo(info, this);
-						//Check is there is data to download from Server or not(By QUERY_UUID).
-                        // If yes, send MSG_HAS_UPDATE.
-                        // If no, send MSG_HAS_NO_UPDATE.
-						mBServer.checkForUpdates();
-					}
-				}
-			}
-		}
-		else
-		{
-			THLLog.d("debug", "CM null");
-		}
+//		/** check network is available or not. */
+//		ConnectivityManager cm	= (ConnectivityManager)getSystemService(UIMain.CONNECTIVITY_SERVICE);
+//		if(null != cm)
+//		{
+//			NetworkInfo ni = cm.getActiveNetworkInfo();
+//			if(null == ni || (!ni.isConnected()))
+//			{
+//				dlgNetworkNotAvailable();     //Show a dialog to inform users to enable  the network.
+//			}
+//			else
+//			{
+//				THLLog.d("debug", "NI not null");
+//
+//				NetworkInfo niMobile= cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+//				if(null != niMobile)
+//				{
+//					boolean isMobileInt	= niMobile.isConnectedOrConnecting();
+//
+//					if(isMobileInt)
+//					{
+//						dlgNetworkMobile();  //Show a dialog to make sure to use the Mobile Internet
+//					}
+//					else
+//					{
+//						USBeaconServerInfo info= new USBeaconServerInfo();
+//
+//						info.serverUrl		= HTTP_API;
+//						info.queryUuid		= QUERY_UUID;
+//						info.downloadPath	= STORE_PATH;
+//
+//						mBServer.setServerInfo(info, this);
+//						//Check is there is data to download from Server or not(By QUERY_UUID).
+//                        // If yes, send MSG_HAS_UPDATE.
+//                        // If no, send MSG_HAS_NO_UPDATE.
+//						mBServer.checkForUpdates();
+//					}
+//				}
+//			}
+//		}
+//		else
+//		{
+//			THLLog.d("debug", "CM null");
+//		}
 		
 		mHandler.sendEmptyMessageDelayed(MSG_UPDATE_BEACON_LIST, 500);
 	}
@@ -357,57 +357,6 @@ public class UIMain extends Activity implements iBeaconScanManager.OniBeaconScan
         }
     };
 
-    /** ================================================ */
-	private String getName;
-	private String setName () {
-        final EditText et = new EditText(this);
-        new AlertDialog.Builder(this).setTitle("命名裝置(請勿超過8個字元)")
-                .setView(et)
-				.setCancelable(false)
-                .setPositiveButton("確定", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        String input = et.getText().toString();
-                        if (input.equals("")) {
-                            Toast.makeText(getApplicationContext(), "內容不能為空！", Toast.LENGTH_LONG).show();
-                        }
-                        else if(input.length()>8){
-                            Toast.makeText(getApplicationContext(), "請勿超過8個字元！", Toast.LENGTH_LONG).show();
-                        }
-                        else {
-                            getName = input;
-                        }
-                    }
-                })
-                .setNegativeButton("取消", null)
-                .show();
-        return getName;
-    }
-
-    /** ================================================ */
-    private String getDetail;
-    private String setDetail () {
-        final EditText et = new EditText(this);
-        new AlertDialog.Builder(this).setTitle("輸入描述(請勿超過30個字元)")
-                .setView(et)
-				.setCancelable(false)
-                .setPositiveButton("確定", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        String input = et.getText().toString();
-                        if(input.length()>30){
-                            Toast.makeText(getApplicationContext(), "請勿超過30個字元！", Toast.LENGTH_LONG).show();
-                        }
-                        else {
-                            getDetail = input;
-                        }
-                    }
-                })
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {getName = "";}//若按取消 則getName也設為空值
-                })
-                .show();
-        return getDetail;
-    }
-
 	/** ================================================ */
 	@Override
 	public void onResume()
@@ -455,7 +404,7 @@ public class UIMain extends Activity implements iBeaconScanManager.OniBeaconScan
 	@Override
 	public void onScaned(iBeaconData iBeacon)
 	{
-		synchronized(mListAdapter)
+		synchronized(listAdapter)
 		{
 			addOrUpdateiBeacon(iBeacon);
 		}
@@ -633,12 +582,12 @@ public class UIMain extends Activity implements iBeaconScanManager.OniBeaconScan
 		}
 		
 		{
-			mListAdapter.clear();
+			listAdapter.clear();
 
 			//Add beacon to the list that it could show on the screen.
 			for(ScanediBeacon beacon : miBeacons)
 			{
-				mListAdapter.addItem(new ListItem(beacon.beaconUuid.toUpperCase(), ""+ beacon.major, ""+ beacon.minor, ""+ beacon.rssi,""+beacon.batteryPower, beacon.macAddress));
+				listAdapter.addItem(new ListItem(beacon.beaconUuid.toUpperCase(), ""+ beacon.major, ""+ beacon.minor, ""+ beacon.rssi,""+beacon.batteryPower, beacon.macAddress));
 			}
 		}
 	}
@@ -646,7 +595,7 @@ public class UIMain extends Activity implements iBeaconScanManager.OniBeaconScan
 	/** ========================================================== */
 	public void cleariBeacons()
 	{
-		mListAdapter.clear();
+		listAdapter.clear();
 	}
 
 	@Override
@@ -654,31 +603,6 @@ public class UIMain extends Activity implements iBeaconScanManager.OniBeaconScan
 		super.onDestroy();
 
 		thlApp.onTerminate();
-	}
-}
-
-/** ============================================================== */
-class ListItem
-{
-	public String UUID = "";
-	public String major = "";
-	public String minor = "";
-	public String rssi = "";
-	public String tV_batteryPower = "";
-	String tV_mac = null;
-	
-	public ListItem()
-	{
-	}
-	
-	public ListItem(String UUID, String major, String minor, String rssi, String tV_batteryPower, String tV_mac)
-	{
-		this.UUID = UUID;
-		this.major = major;
-		this.minor = minor;
-		this.rssi = rssi;
-		this.tV_batteryPower = tV_batteryPower;
-		this.tV_mac = tV_mac;
 	}
 }
 
