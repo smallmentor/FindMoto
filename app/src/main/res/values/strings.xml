@@ -9,4 +9,5 @@
     <string name="title_activity_start">StartActivity</string>
     <string name="title_activity_list">ListActivity</string>
     <string name="title_activity_correction">CorrectionActivity</string>
+    <string name="database_name">test2DB.db</string>
 </resources>

@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".BeaconDetailActivity"
+    android:background="@color/colorBackground">
+
+
+    <TextView
+        android:id="@+id/tv3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edt_detail"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="0dp"
+        android:text="MAC位置:"
+        android:textColor="@color/colorTitleText"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tv4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv3"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:text="距　　離:"
+        android:textColor="@color/colorTitleText"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tV_dist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv3"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="110dp"
+        android:layout_marginTop="11dp"
+        android:text="約2.5(米)"
+        android:textColor="@color/colorTitleText"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tV_mac"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edt_detail"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="0dp"
+        android:layout_toEndOf="@+id/tv3"
+        android:text="AA:AA:AA:AA:AA:AA"
+        android:textColor="@color/colorTitleText"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tv2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv1"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="21dp"
+        android:text="裝置描述:"
+        android:textColor="@color/colorTitleText"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/edt_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edt_name"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="10dp"
+        android:layout_toEndOf="@+id/tv1"
+        android:ems="10"
+        android:hint="在此可描述您的裝置"
+        android:inputType="textMultiLine"
+        android:textColor="@color/colorTitleText"
+        android:textSize="20sp"
+        android:textCursorDrawable="@drawable/cursor_style"
+        android:enabled="false"/>
+
+    <TextView
+        android:id="@+id/tv1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:text="裝置名稱:"
+        android:textSize="20sp"
+        android:textColor="@color/colorTitleText"/>
+
+    <EditText
+        android:id="@+id/edt_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="10dp"
+        android:layout_toEndOf="@+id/tv1"
+        android:ems="10"
+        android:hint="請輸入裝置名稱"
+        android:inputType="text"
+        android:textColor="@color/colorTitleText"
+        android:textSize="20sp"
+        android:enabled="false"
+        android:textCursorDrawable="@drawable/cursor_style"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="15dp"
+        android:orientation="vertical">
+
+        <TableRow
+            android:id="@+id/BtnLayout_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btnToRename"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="修 改"
+                android:background="@drawable/button_style"
+                android:textColor="#fff"
+                android:textSize="18sp"/>
+
+            <Space android:layout_width="10dp"/>
+
+            <Button
+                android:id="@+id/btnDelete"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="刪 除"
+                android:background="@drawable/button_style"
+                android:textColor="#fff"
+                android:textSize="18sp"/>
+
+            <Space android:layout_width="10dp"/>
+
+            <Button
+                android:id="@+id/btnBack"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="返 回"
+                android:background="@drawable/button_style"
+                android:textColor="#fff"
+                android:textSize="18sp"/>
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/BtnLayout_rename"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <Button
+                android:id="@+id/btnChangeName"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="確　定"
+                android:background="@drawable/button_style"
+                android:textColor="#fff"
+                android:textSize="18sp"/>
+
+            <Space android:layout_width="10dp"/>
+
+            <Button
+                android:id="@+id/btnCancel"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="取　消"
+                android:background="@drawable/button_style"
+                android:textColor="#fff"
+                android:textSize="18sp"/>
+        </TableRow>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnSetDefault"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tV_dist"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:text="　設 為 預 設　"
+        android:background="@drawable/button_style"
+        android:textColor="#fff"
+        android:textSize="18sp"/>
+
+</RelativeLayout>

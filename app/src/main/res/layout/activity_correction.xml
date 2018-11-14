@@ -13,28 +13,28 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="第一次"
-            android:textColor="@color/colorContentText"
+            android:textColor="@color/colorTitleText"
             android:textSize="20sp" />
 
         <TextView
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="第二次"
-            android:textColor="@color/colorContentText"
+            android:textColor="@color/colorTitleText"
             android:textSize="20sp" />
 
         <TextView
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="第三次"
-            android:textColor="@color/colorContentText"
+            android:textColor="@color/colorTitleText"
             android:textSize="20sp" />
 
         <TextView
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="第四次"
-            android:textColor="@color/colorContentText"
+            android:textColor="@color/colorTitleText"
             android:textSize="20sp" />
     </TableRow>
 
@@ -44,14 +44,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="-80dbm"
-            android:textColor="@color/colorContentText"
+            android:textColor="@color/colorTitleText"
             android:textSize="20sp" />
 
         <TextView
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="-76dbm"
-            android:textColor="@color/colorContentText"
+            android:textColor="@color/colorTitleText"
             android:textSize="20sp" />
 
         <TextView

@@ -12,7 +12,7 @@
 		android:background="@color/colorBackground"
 		android:gravity="center"
 		android:text="以下為附近掃瞄到的 iBeacon"
-		android:textColor="@color/colorContentText" />
+		android:textColor="@color/colorTitleText" />
 
 	<ListView
 		android:id="@+id/beacon_list"
@@ -20,7 +20,7 @@
 		android:layout_height="0dp"
 		android:layout_weight="1800"
 		android:background="@color/colorBackground"
-		android:divider="@color/colorContentText"
+		android:divider="@color/colorTitleText"
 		android:dividerHeight="2dp"
 		android:paddingLeft="10dp"
 		android:paddingRight="10dp"

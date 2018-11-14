@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -12,21 +12,41 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="0dp"
         app:srcCompat="@drawable/findmoto_logo" />
 
-    <TableRow>
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp">
 
         <Button
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
             android:id="@+id/btnGotoList_start"
-            android:text="更改選擇裝置" />
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="更改選擇裝置"
+            android:background="@drawable/button_style"
+            android:textColor="#fff"
+            android:textSize="18sp"/>
+
+        <Space android:layout_width="10dp"/>
 
         <Button
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
             android:id="@+id/btnFind"
-            android:text="開始尋車" />
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="開 始 尋 車"
+            android:background="@drawable/button_style"
+            android:textColor="#fff"
+            android:textSize="18sp"/>
+
     </TableRow>
 
-</TableLayout>
+</RelativeLayout>

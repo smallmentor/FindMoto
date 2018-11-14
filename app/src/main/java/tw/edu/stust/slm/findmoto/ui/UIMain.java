@@ -15,6 +15,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -200,14 +201,12 @@ public class UIMain extends Activity implements iBeaconScanManager.OniBeaconScan
 		//資料庫建立
         db= openOrCreateDatabase("test2DB.db",MODE_PRIVATE,null);
 
-        String createTable = "create table if not exists test " +
-                "(_id integer primary key autoincrement, " +
-                "name text, " +
-                "detail text, " +
-                "uuid text, " +
-                "major text, " +
-                "minor text, " +
-                "mac text)";
+		String createTable = "create table if not exists test " +
+				"(_id integer primary key autoincrement, " +
+				"name text, " +
+				"detail text, " +
+				"mac text, " +
+				"defaul text)";
 
         db.execSQL(createTable);
 
@@ -299,18 +298,14 @@ public class UIMain extends Activity implements iBeaconScanManager.OniBeaconScan
 	private AdapterView.OnItemClickListener listViewNoItemClick = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            TextView tV_UUID = view.findViewById(R.id.tV_UUID);
-            TextView tV_major = view.findViewById(R.id.tV_major);
-            TextView tV_minor = view.findViewById(R.id.tV_minor);
+
             TextView tV_mac = view.findViewById(R.id.tV_mac);
             String name = "";
             String detail = "";
 
-			cv.put("uuid", tV_UUID.getText().toString());
-			cv.put("major", tV_major.getText().toString());
-			cv.put("minor", tV_minor.getText().toString());
 			cv.put("mac", tV_mac.getText().toString());
 
+			//檢查輸入規則
 			final EditText et = new EditText(UIMain.this);
 			new AlertDialog.Builder(UIMain.this).setTitle("命名裝置(請勿超過8個字元)")
 					.setView(et)
@@ -325,9 +320,7 @@ public class UIMain extends Activity implements iBeaconScanManager.OniBeaconScan
 								Toast.makeText(getApplicationContext(), "請勿超過8個字元！", Toast.LENGTH_LONG).show();
 							}
 							else {
-								Log.d("命名裝置","else後");
 								cv.put("name", input);
-								Log.d("命名裝置","input後");
 								final EditText et = new EditText(UIMain.this);
 								new AlertDialog.Builder(UIMain.this).setTitle("輸入描述(請勿超過30個字元)")
 										.setView(et)
@@ -339,11 +332,26 @@ public class UIMain extends Activity implements iBeaconScanManager.OniBeaconScan
 													Toast.makeText(getApplicationContext(), "請勿超過30個字元！", Toast.LENGTH_LONG).show();
 												}
 												else {
-													Log.d("輸入描述","else裡");
 													cv.put("detail", input);
+													cv.put("defaul","true");
+
+													//先把其他裝置預設取消
+													Cursor cursor = db.rawQuery("select * from test ", null);
+													if (cursor.getCount() > 0) {  //如果沒有資料則離開
+														cursor.moveToLast(); //移至最後一筆，由後往前面讀取
+														String id;
+														do{
+															id =String.valueOf(cursor.getInt(0));
+															ContentValues cv = new ContentValues(1);
+															cv.put("defaul","false");
+															db.update("test", cv, "_id=?", new String[]{id});
+														}while(cursor.moveToPrevious());
+													}
+
+													//設新增的為預設裝置
 													db.insert("test", null, cv);
-													Log.d("輸入描述","insert後");
 													cv.clear();
+													finish();
 												}
 											}
 										})

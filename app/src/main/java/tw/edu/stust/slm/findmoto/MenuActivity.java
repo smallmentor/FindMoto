@@ -1,15 +1,12 @@
 package tw.edu.stust.slm.findmoto;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,9 +15,7 @@ import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -40,16 +36,12 @@ import android.widget.Toast;
 
 import com.THLight.USBeacon.App.Lib.BatteryPowerData;
 import com.THLight.USBeacon.App.Lib.USBeaconConnection;
-import com.THLight.USBeacon.App.Lib.USBeaconData;
-import com.THLight.USBeacon.App.Lib.USBeaconList;
 import com.THLight.USBeacon.App.Lib.iBeaconData;
 import com.THLight.USBeacon.App.Lib.iBeaconScanManager;
-import com.THLight.Util.THLLog;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import tw.edu.stust.slm.findmoto.ui.ListItem;
 import tw.edu.stust.slm.findmoto.ui.UIMain;
 
 public class MenuActivity extends AppCompatActivity
@@ -71,7 +63,6 @@ public class MenuActivity extends AppCompatActivity
     final int MSG_START_SCAN_BEACON		= 2000;
     final int MSG_STOP_SCAN_BEACON		= 2001;
     final int MSG_SERVER_RESPONSE		= 3000;
-
     final int TIME_BEACON_TIMEOUT		= 30000;
 
     iBeaconScanManager miScaner	= null;
@@ -200,17 +191,26 @@ public class MenuActivity extends AppCompatActivity
             }
         });
 
-        //Beacon List建立
+        beacon_List.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+
+                Intent it = new Intent();
+                it.putExtra("position",position);
+                it.setClass(MenuActivity.this,BeaconDetailActivity.class);
+                startActivity(it);
+            }
+        });
+
+        //Beacon database建立
         db= openOrCreateDatabase("test2DB.db",MODE_PRIVATE,null);
 
         String createTable = "create table if not exists test " +
                 "(_id integer primary key autoincrement, " +
                 "name text, " +
                 "detail text, " +
-                "uuid text, " +
-                "major text, " +
-                "minor text, " +
-                "mac text)";
+                "mac text, " +
+                "defaul text)";
 
         db.execSQL(createTable);
         showData();
@@ -275,6 +275,7 @@ public class MenuActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         requestStoragePermission();
+        requestLocationPermission();
 
         showData();
 
@@ -362,15 +363,6 @@ public class MenuActivity extends AppCompatActivity
             }
         }
         listAdapter.updataScanned(miBeacons);
-        {
-
-            //把beacon加到beacon_list中
-//            for(ScanediBeacon beacon : miBeacons)
-//            {
-//
-//                listAdapter.addItem(new ListItem(beacon.beaconUuid.toUpperCase(), ""+ beacon.major, ""+ beacon.minor, ""+ beacon.rssi,""+beacon.batteryPower, beacon.macAddress));
-//            }
-        }
     }
 
     @Override
@@ -422,6 +414,17 @@ public class MenuActivity extends AppCompatActivity
 
         beacon.lastUpdate= currTime;
     }
+
+    private void requestLocationPermission(){
+        if(Build.VERSION.SDK_INT >=23) {
+            int readPermission = checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+
+            if (readPermission !=PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},1);
+                return;
+            }
+        }
+    }
 }
 
 /** ============================================================== */
@@ -432,10 +435,8 @@ class BLEListAdapter extends BaseAdapter
     private Cursor cursor;
 
     List<ScanediBeacon> miBeacons = new ArrayList<ScanediBeacon>();
-    private String uuid;
-    private String major;
-    private String minor;
     private String mac;
+    private String defaul;
 
     /** ================================================ */
     public BLEListAdapter(Context context, Cursor cursor) {
@@ -486,13 +487,12 @@ class BLEListAdapter extends BaseAdapter
             TextView tV_name	= view.findViewById(R.id.tV_name);
             TextView tV_scanned = view.findViewById(R.id.tV_scanned);
             TextView tV_detail	= view.findViewById(R.id.tV_detail);
+            Button btn_defaultIcon = view.findViewById(R.id.btn_defaultIcon);
 
             tV_name.setText(cursor.getString(1));
             tV_detail.setText(cursor.getString(2));
-            uuid = cursor.getString(3);
-            major = cursor.getString(4);
-            minor = cursor.getString(5);
-            mac = cursor.getString(6);
+            mac = cursor.getString(3);
+            defaul = cursor.getString(4);
 
             //先預設成範圍外
             tV_scanned.setText("偵測範圍外");
@@ -502,12 +502,20 @@ class BLEListAdapter extends BaseAdapter
             if(miBeacons.size()>0) {
                 for(ScanediBeacon beacon : miBeacons) {
                     //有掃到的改成"偵測範圍內"
-                    if(uuid.equals(beacon.beaconUuid)) {
+                    if(mac.equals(beacon.macAddress)) {
                         tV_scanned.setText("偵測範圍內");
-                        tV_scanned.setTextColor(ContextCompat.getColor(context,R.color.colorTrue));
+                        tV_scanned.setTextColor(ContextCompat.getColor(context,R.color.colorSuccess));
                     }
                 }
             }
+
+            //設置"預設"圖示
+            if("true".equals(defaul)) {
+                btn_defaultIcon.setVisibility(View.VISIBLE);
+            }else {
+                btn_defaultIcon.setVisibility(View.GONE);
+            }
+
         }
         else
         {
@@ -525,8 +533,8 @@ class BLEListAdapter extends BaseAdapter
     @Override
     public boolean isEnabled(int position)
     {
-        if(cursor.getCount() <= position)
-            return false;
+//        if(cursor.getCount() <= position)
+//            return false;
 
         return true;
     }

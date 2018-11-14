@@ -14,7 +14,7 @@
 		android:layout_height="wrap_content"
 		android:gravity="left|center_vertical"
 		android:singleLine="true"
-		android:textColor="@color/colorContentText"
+		android:textColor="@color/colorTitleText"
 		android:textStyle="bold" />
  
     <Space android:layout_width="match_parent" android:layout_height="5dp" />
@@ -31,14 +31,14 @@
 			android:layout_height="match_parent"
 			android:layout_weight="100"
 			android:text="Mac:"
-			android:textColor="@color/colorContentText" />
+			android:textColor="@color/colorTitleText" />
 
 		<TextView
 			android:id="@+id/tV_mac"
 			android:layout_width="0dp"
 			android:layout_height="match_parent"
 			android:layout_weight="620"
-			android:textColor="@color/colorContentText" />
+			android:textColor="@color/colorTitleText" />
 	</LinearLayout>
 
 	<Space
@@ -59,7 +59,7 @@
 			android:paddingLeft="2dp"
 			android:singleLine="true"
 			android:text="Major : "
-			android:textColor="@color/colorContentText" />
+			android:textColor="@color/colorTitleText" />
 
 		<TextView
 			android:id="@+id/tV_major"
@@ -68,7 +68,7 @@
 			android:layout_weight="220"
 			android:gravity="center"
 			android:singleLine="true"
-			android:textColor="@color/colorContentText" />
+			android:textColor="@color/colorTitleText" />
 
 		<TextView
 			android:layout_width="wrap_content"
@@ -77,7 +77,7 @@
 			android:paddingLeft="2dp"
 			android:singleLine="true"
 			android:text="Minor : "
-			android:textColor="@color/colorContentText" />
+			android:textColor="@color/colorTitleText" />
 
 		<TextView
 			android:id="@+id/tV_minor"
@@ -86,7 +86,7 @@
 			android:layout_weight="220"
 			android:gravity="center"
 			android:singleLine="true"
-			android:textColor="@color/colorContentText" />
+			android:textColor="@color/colorTitleText" />
 
 	</LinearLayout>
     
@@ -107,7 +107,7 @@
 			android:paddingLeft="2dp"
 			android:singleLine="true"
 			android:text="訊號強度 : "
-			android:textColor="@color/colorContentText" />
+			android:textColor="@color/colorTitleText" />
 
 		<TextView
 			android:id="@+id/tV_rssi"
@@ -116,7 +116,7 @@
 			android:layout_weight="220"
 			android:gravity="center"
 			android:singleLine="true"
-			android:textColor="@color/colorContentText" />
+			android:textColor="@color/colorTitleText" />
 
 		<TextView
 			android:layout_width="wrap_content"
@@ -125,7 +125,7 @@
 			android:paddingLeft="2dp"
 			android:singleLine="true"
 			android:text="剩餘電量 : "
-			android:textColor="@color/colorContentText" />
+			android:textColor="@color/colorTitleText" />
 
 		<TextView
 			android:id="@+id/tV_batteryPower"
@@ -134,7 +134,7 @@
 			android:layout_weight="220"
 			android:gravity="center"
 			android:singleLine="true"
-			android:textColor="@color/colorContentText" />
+			android:textColor="@color/colorTitleText" />
 	    
 	</LinearLayout>
 	

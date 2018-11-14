@@ -14,10 +14,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="5dp"
         android:text="我的摩托車"
-        android:textColor="@color/colorContentText"
+        android:textColor="@color/colorTitleText"
         android:textSize="20sp" />
 
     <TextView
@@ -26,8 +26,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="3dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="15dp"
         android:text="偵測範圍內"
         android:textColor="#548234"
         android:textSize="20sp"
@@ -44,7 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tV_name"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="5dp"
         android:text="詳細：2018年買的黑色勁戰125"
         android:textSize="16sp"
@@ -62,5 +62,23 @@
         android:layout_alignParentStart="true"
         android:layout_marginTop="0dp" />
 
+    <Button
+        android:id="@+id/btn_defaultIcon"
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:layout_alignStart="@+id/tV_scanned"
+        android:layout_alignTop="@+id/tV_detail"
+        android:layout_alignEnd="@+id/tV_scanned"
+        android:layout_alignBottom="@+id/tV_detail"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="0dp"
+        android:width="10dp"
+        android:background="@drawable/default_icon_style"
+        android:text="預設"
+        android:textColor="#fff"
+        android:textSize="15sp"
+        android:focusable="false"/>
 
 </RelativeLayout>
