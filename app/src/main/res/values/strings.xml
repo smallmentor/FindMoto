@@ -10,4 +10,6 @@
     <string name="title_activity_list">ListActivity</string>
     <string name="title_activity_correction">CorrectionActivity</string>
     <string name="database_name">test2DB.db</string>
+    <string name="title_activity_find">Find</string>
+    <string name="title_activity_maps">Map</string>
 </resources>

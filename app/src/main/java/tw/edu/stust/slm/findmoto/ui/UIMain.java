@@ -70,7 +70,7 @@ public class UIMain extends Activity implements iBeaconScanManager.OniBeaconScan
 	final int MSG_STOP_SCAN_BEACON		= 2001;
 	final int MSG_SERVER_RESPONSE		= 3000;
 	
-	final int TIME_BEACON_TIMEOUT		= 30000;
+	final int TIME_BEACON_TIMEOUT		= 10000;
 
     SQLiteDatabase db;
 
@@ -144,11 +144,11 @@ public class UIMain extends Activity implements iBeaconScanManager.OniBeaconScan
 							
 						case USBeaconConnection.MSG_DOWNLOAD_FINISHED:
 							break;
-		
+
 						case USBeaconConnection.MSG_DOWNLOAD_FAILED:
 							Toast.makeText(UIMain.this, "Download file failed!", Toast.LENGTH_SHORT).show();
 							break;
-							
+
 						case USBeaconConnection.MSG_DATA_UPDATE_FINISHED:
 							{
 								USBeaconList BList= mBServer.getUSBeaconList();  //Get the beacon list that was from Server
@@ -167,7 +167,7 @@ public class UIMain extends Activity implements iBeaconScanManager.OniBeaconScan
 								{
 								    String BeaconData = "";
 									Toast.makeText(UIMain.this, "Data Updated("+ BList.getList().size()+ ")", Toast.LENGTH_SHORT).show();
-									
+
 									for(USBeaconData data : BList.getList())
 									{
 									    BeaconData = BeaconData + "Name("+ data.name+ "), Ver("+ data.major+ "."+ data.minor+ ")\n";
@@ -178,7 +178,7 @@ public class UIMain extends Activity implements iBeaconScanManager.OniBeaconScan
 								}
 							}
 							break;
-							
+
 						case USBeaconConnection.MSG_DATA_UPDATE_FAILED:
 							Toast.makeText(UIMain.this, "UPDATE_FAILED!", Toast.LENGTH_SHORT).show();
 							break;
@@ -244,51 +244,6 @@ public class UIMain extends Activity implements iBeaconScanManager.OniBeaconScan
 				Toast.makeText(this, "Create folder("+ STORE_PATH+ ") failed.", Toast.LENGTH_SHORT).show();
 			}
 		}
-		
-//		/** check network is available or not. */
-//		ConnectivityManager cm	= (ConnectivityManager)getSystemService(UIMain.CONNECTIVITY_SERVICE);
-//		if(null != cm)
-//		{
-//			NetworkInfo ni = cm.getActiveNetworkInfo();
-//			if(null == ni || (!ni.isConnected()))
-//			{
-//				dlgNetworkNotAvailable();     //Show a dialog to inform users to enable  the network.
-//			}
-//			else
-//			{
-//				THLLog.d("debug", "NI not null");
-//
-//				NetworkInfo niMobile= cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-//				if(null != niMobile)
-//				{
-//					boolean isMobileInt	= niMobile.isConnectedOrConnecting();
-//
-//					if(isMobileInt)
-//					{
-//						dlgNetworkMobile();  //Show a dialog to make sure to use the Mobile Internet
-//					}
-//					else
-//					{
-//						USBeaconServerInfo info= new USBeaconServerInfo();
-//
-//						info.serverUrl		= HTTP_API;
-//						info.queryUuid		= QUERY_UUID;
-//						info.downloadPath	= STORE_PATH;
-//
-//						mBServer.setServerInfo(info, this);
-//						//Check is there is data to download from Server or not(By QUERY_UUID).
-//                        // If yes, send MSG_HAS_UPDATE.
-//                        // If no, send MSG_HAS_NO_UPDATE.
-//						mBServer.checkForUpdates();
-//					}
-//				}
-//			}
-//		}
-//		else
-//		{
-//			THLLog.d("debug", "CM null");
-//		}
-		
 		mHandler.sendEmptyMessageDelayed(MSG_UPDATE_BEACON_LIST, 500);
 	}
 
@@ -458,65 +413,8 @@ public class UIMain extends Activity implements iBeaconScanManager.OniBeaconScan
 
         dlg.show();
     }
+
 	/** ========================================================== */
-	public void dlgNetworkNotAvailable()
-	{
-		final AlertDialog dlg = new AlertDialog.Builder(UIMain.this).create();
-		
-		dlg.setTitle("Network");
-		dlg.setMessage("Please enable your network for updating beacon list.");
-
-		dlg.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener()
-		{
-			public void onClick(DialogInterface dialog, int id)
-			{
-				dlg.dismiss();
-			}
-		});
-		
-		dlg.show();
-	}
-	
-	/** ========================================================== */
-	public void dlgNetworkMobile()
-	{
-		final AlertDialog dlg = new AlertDialog.Builder(UIMain.this).create();
-		
-		dlg.setTitle("3G");
-		dlg.setMessage("App will send/recv data via Mobile Internet, this may result in significant data charges.");
-
-		// To check yes or no of using mobile Internet.
-		dlg.setButton(AlertDialog.BUTTON_POSITIVE, "Allow", new DialogInterface.OnClickListener()
-		{
-			public void onClick(DialogInterface dialog, int id)
-			{
-                requestLocationPermission();
-                Log.d("debug","dlgNetworkMobile-1");
-				Config.allow3G= true;
-				Log.d("debug","dlgNetworkMobile-2");
-				dlg.dismiss();
-				USBeaconServerInfo info= new USBeaconServerInfo();
-
-				info.serverUrl		= HTTP_API;
-				info.queryUuid		= QUERY_UUID;
-				info.downloadPath	= STORE_PATH;
-				mBServer.setServerInfo(info, UIMain.this);
-				mBServer.checkForUpdates();
-				Log.d("debug","dlgNetworkMobile-4");
-			}
-		});
-		
-		dlg.setButton(AlertDialog.BUTTON_NEGATIVE, "Reject", new DialogInterface.OnClickListener()
-		{
-			public void onClick(DialogInterface dialog, int id)
-			{
-				Config.allow3G= false;
-				dlg.dismiss();
-			}
-		});
-	
-		dlg.show();
-	}
 
 	private void requestStoragePermission(){
 		if(Build.VERSION.SDK_INT >=23) {
@@ -528,17 +426,6 @@ public class UIMain extends Activity implements iBeaconScanManager.OniBeaconScan
 			}
 		}
 	}
-
-    private void requestLocationPermission(){
-        if(Build.VERSION.SDK_INT >=23) {
-            int readPermission = checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
-
-            if (readPermission !=PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},1);
-                return;
-            }
-        }
-    }
 	
 	/** ========================================================== */
 	public void addOrUpdateiBeacon(iBeaconData iBeacon)

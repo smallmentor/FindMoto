@@ -63,7 +63,7 @@ public class MenuActivity extends AppCompatActivity
     final int MSG_START_SCAN_BEACON		= 2000;
     final int MSG_STOP_SCAN_BEACON		= 2001;
     final int MSG_SERVER_RESPONSE		= 3000;
-    final int TIME_BEACON_TIMEOUT		= 30000;
+    final int TIME_BEACON_TIMEOUT		= 10000;
 
     iBeaconScanManager miScaner	= null;
     USBeaconConnection mBServer	= new USBeaconConnection();
@@ -92,7 +92,7 @@ public class MenuActivity extends AppCompatActivity
                     {
                         verifyiBeacons();
                         listAdapter.notifyDataSetChanged();
-                        mHandler.sendEmptyMessageDelayed(MSG_UPDATE_BEACON_LIST, 500);
+                        mHandler.sendEmptyMessageDelayed(MSG_UPDATE_BEACON_LIST, 200);
                     }
                     break;
 

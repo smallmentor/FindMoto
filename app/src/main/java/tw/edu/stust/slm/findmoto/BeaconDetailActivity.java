@@ -49,7 +49,7 @@ public class BeaconDetailActivity extends AppCompatActivity {
         btnBack             = findViewById(R.id.btnBack);
         btnUpdate           = findViewById(R.id.btnChangeName);
         btnCancel           =  findViewById(R.id.btnCancel);
-        btnSetDefault       = findViewById(R.id.btnSetDefault);
+        btnSetDefault       = findViewById(R.id.btn_endFind);
 
         //事件設定
         btnDelete.     setOnClickListener(deleteClick);
