@@ -6,6 +6,7 @@
     <color name="colorTitleBackground">#2b85e4</color>
     <color name="colorTitleText">#17233d</color>
     <color name="colorContentText">#515a6e</color>
+    <color name="colorDisabledText">#c5c8ce</color>
     <color name="colorError">#ed4014</color>
     <color name="colorWarning">#ff9900</color>
     <color name="colorSuccess">#19be6b</color>

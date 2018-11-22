@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Rect;
+import android.media.session.PlaybackState;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -175,7 +176,17 @@ public class MenuActivity extends AppCompatActivity
         btnFind.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Cursor cursor = db.rawQuery("select * from test ", null);
+
                 Intent it = new Intent();
+
+                for(int i=0;i<cursor.getCount();i++) {
+                    cursor.moveToPosition(i);
+                    if(cursor.getString(4).equals("true")){
+                        it.putExtra("name",cursor.getString(1));
+                        it.putExtra("mac",cursor.getString(3));
+                    }
+                }
                 it.setClass(MenuActivity.this,FindActivity.class);
                 startActivity(it);
             }
