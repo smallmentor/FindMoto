@@ -30,3 +30,18 @@
 	* 可以在詳細畫面刪除裝置
 	- 裝置清單現在會顯示哪個裝置是預設裝置
 	* 主題配色大幅更改、新增自定義外觀
+6. 2018/11/21
+   * FindActivity.java 初始化設定完成
+	- activity_find.xml 畫面建立完成
+	* 新增自訂義 Beacon 物件
+	- 介面部分微調
+	* 從這裡開始使用Google Bluetooth Low Energy Overview
+7. 2018/11/22
+   * 已可以在find畫面看到距離、訊號強度、方向正確與否的資訊
+ 	- 使用smoothDist滑順測距結果
+	* 在MenuActivity到FindActivity的部分putExtra了預設裝置的name及mac
+8. 2018/11/28
+   - Find畫面中距離、訊號強度、方向正確與否等完成(改進前次)
+   	* progressBar功能完成
+   	- 取消smoothDist
+   	* 運用distArray[5]去除不穩定的訊號
