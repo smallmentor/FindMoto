@@ -158,11 +158,15 @@ public class FindActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void scanBeacon(final boolean enable) {
         final BluetoothLeScanner bluetoothLeScanner = mBluetoothAdapter.getBluetoothLeScanner();
-        Log.d("scanBeacon","開始搜尋or結束搜尋");
-        if (enable)
+        if (enable){
+            Log.d("scanBeacon","開始搜尋");
             bluetoothLeScanner.startScan(scanCallback);
-        else
+        }
+        else{
+            Log.d("scanBeacon","結束搜尋");
             bluetoothLeScanner.stopScan(scanCallback);
+        }
+
     }
 
     private ScanCallback scanCallback = new ScanCallback() {
@@ -189,6 +193,7 @@ public class FindActivity extends AppCompatActivity implements OnMapReadyCallbac
                 scanBeacon(false);
 
             }else{
+                Log.d("scanCallback","不是");
 //                tV_direction.setText("尚未搜索到裝置");
             }
         }
@@ -206,11 +211,17 @@ public class FindActivity extends AppCompatActivity implements OnMapReadyCallbac
             }else{
                 //把距離跟訊號強度顯示到畫面上
                 double newDist = 0;
+                double lestDist = beacon.getLestDist();
+
                 for(int i = 1;i<=DIST_ARRAY_MAX_SIZE-1;i++){
                     newDist += Double.valueOf(distArray.get(i));
-                }
-                newDist = newDist / (DIST_ARRAY_MAX_SIZE-2);
-                BigDecimal bdDist = new BigDecimal(newDist);
+            }
+            newDist = newDist / (DIST_ARRAY_MAX_SIZE-2);
+            BigDecimal bdDist = new BigDecimal(newDist);
+
+            newDist = 0.75 * newDist + (1-0.75) * lestDist;// 平滑訊號
+
+                //顯示
                 double dist = Double.valueOf(bdDist.setScale(2,BigDecimal.ROUND_HALF_UP)+"");
                 tV_dist.setText("大約距離：" + dist + " 公尺");
                 distArray.clear();
@@ -221,9 +232,9 @@ public class FindActivity extends AppCompatActivity implements OnMapReadyCallbac
 //                tV_direction.setText(progressNum);
 
                 //設定tV_direction顯示的內容
-                if(newDist-0.5<beacon.getLestDist() && beacon.getLestDist()<newDist+0.5){
-                    Log.d("tV_direction","誤差20公分以內");
-                }else if(newDist<beacon.getLestDist()){
+                if(newDist-0.5 < lestDist && lestDist < newDist+0.5){
+                    Log.d("tV_direction","誤差50公分以內");
+                }else if(newDist < lestDist){
                     tV_direction.setText("方向正確");
                     tV_direction.setTextColor(ContextCompat.getColor(FindActivity.this,R.color.colorSuccess));
                 }else{
