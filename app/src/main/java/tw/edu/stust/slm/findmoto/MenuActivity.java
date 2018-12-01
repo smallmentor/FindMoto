@@ -1,13 +1,21 @@
 package tw.edu.stust.slm.findmoto;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Rect;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.media.session.PlaybackState;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,6 +31,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.FocusFinder;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,10 +57,11 @@ import tw.edu.stust.slm.findmoto.ui.UIMain;
 public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, iBeaconScanManager.OniBeaconScan {
 
-    View startLayout,listLayout,settingLayout;
-    Button btnGotoList_start,btnGotoList_setting,btnFind,btnStartCorrection;
+    View startLayout, listLayout, settingLayout;
+    Button btnGotoList_start, btnGotoList_setting, btnFind, btnStartCorrection, btnGetLocation;
     ListView beacon_List;
     FloatingActionButton fabAdd;
+    SharedPreferences spLocation;
 
     BLEListAdapter listAdapter = null;
     SQLiteDatabase db;
@@ -138,17 +148,17 @@ public class MenuActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //開始搜尋、裝置列表、矯正等 介面之引用
+        //初始化
         startLayout = findViewById(R.id.contentStart);
         listLayout = findViewById(R.id.contentList);
         settingLayout = findViewById(R.id.contentSetting);
 
-        //開啟裝置列表按鈕
         btnGotoList_start = findViewById(R.id.btnGotoList_start);
         btnGotoList_setting = findViewById(R.id.btnGotoList_setting);
 
         btnFind = findViewById(R.id.btnFind);
 
+        btnGetLocation = findViewById(R.id.btnGetLocation);
         btnStartCorrection = findViewById(R.id.btnStartCorrection);
         //浮動按鈕
         fabAdd = findViewById(R.id.fabAdd);
@@ -156,11 +166,14 @@ public class MenuActivity extends AppCompatActivity
         //裝置清單
         beacon_List = findViewById(R.id.beacon_List);
 
+        spLocation = getSharedPreferences("location", MODE_PRIVATE);
+
         miScaner		= new iBeaconScanManager(this, this);
 
         //事件
         btnGotoList_setting.setOnClickListener(btnGoToListClick);
         btnGotoList_start.setOnClickListener(btnGoToListClick);
+        btnGetLocation.setOnClickListener(btnGetLocationClick);
 
         //新增裝置畫面
         fabAdd.setOnClickListener(new View.OnClickListener() {
@@ -300,6 +313,53 @@ public class MenuActivity extends AppCompatActivity
         }
     };
 
+    View.OnClickListener btnGetLocationClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            getLocation();
+        }
+    };
+
+    //取得經緯度
+    public void getLocation() {
+
+        //檢查權限要求
+        if(Build.VERSION.SDK_INT >=23) {
+            int readPermission = checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+
+            if (readPermission !=PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},1);
+                return;
+            }
+        }
+
+        LocationManager locationManager;
+        Location location;
+        final String contextService = Context.LOCATION_SERVICE;
+        String provider;
+        locationManager = (LocationManager) getSystemService(contextService);
+
+        //設定高精度、不要求海拔、不要求方位、允許網路流量花費、低功耗
+        Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        criteria.setAltitudeRequired(false);
+        criteria.setBearingRequired(false);
+        criteria.setCostAllowed(true);
+        criteria.setPowerRequirement(Criteria.POWER_LOW);
+
+        //從可用的位置提供器中，找到以上標準的最佳提供器
+        provider = locationManager.getBestProvider(criteria, true);
+
+        //取得最後一次變化的位置
+        location = locationManager.getLastKnownLocation(provider);
+        spLocation.edit()
+                .putString("lat", String.valueOf(location.getLatitude()))
+                .putString("lon", String.valueOf(location.getLongitude()))
+                .commit();
+
+        Toast.makeText(this, "已儲存現在位置", Toast.LENGTH_LONG).show();
+    }
+
     //跟跳單有關的東西
     @Override
     public void onBackPressed() {
@@ -346,11 +406,8 @@ public class MenuActivity extends AppCompatActivity
     private void requestStoragePermission(){
         if(Build.VERSION.SDK_INT >=23) {
             int readPermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-            if (readPermission !=PackageManager.PERMISSION_GRANTED) {
+            if (readPermission !=PackageManager.PERMISSION_GRANTED)
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},2);
-                return;
-            }
         }
     }
 
@@ -449,16 +506,13 @@ class BLEListAdapter extends BaseAdapter
     private String mac;
     private String defaul;
 
-    /** ================================================ */
     public BLEListAdapter(Context context, Cursor cursor) {
         this.context = context;
         this.cursor = cursor;
     }
 
-    /** ================================================ */
     public int getCount() { return cursor.getCount(); }
 
-    /** ================================================ */
     public Object getItem(int position)
     {
         if((cursor.getCount() > 0) && cursor.getCount() > position)
@@ -479,10 +533,8 @@ class BLEListAdapter extends BaseAdapter
         return null;
     }
 
-    /** ================================================ */
     public long getItemId(int position) { return 0; }
 
-    /** ================================================ */
     // create a new ImageView for each item referenced by the Adapter
     public View getView(int position, View convertView, ViewGroup parent)
     {
@@ -540,7 +592,7 @@ class BLEListAdapter extends BaseAdapter
         this.miBeacons = miBeacons;
     }
 
-    /** ================================================ */
+
     @Override
     public boolean isEnabled(int position)
     {

@@ -10,17 +10,43 @@
     android:background="@color/colorBackground">
 
     <ImageView
+        android:id="@+id/img_logo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="30dp"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="10dp"
         android:scaleType="fitStart"
         app:srcCompat="@drawable/findmoto_logo" />
 
+
     <TableRow
+        android:id="@+id/tableRow1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/tableRow2"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="10dp">
+
+        <Button
+            android:id="@+id/btnGetLocation"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/button_style"
+            android:text="　紀錄我的位置　"
+            android:textColor="#fff"
+            android:textSize="18sp" />
+
+    </TableRow>
+
+
+    <TableRow
+        android:id="@+id/tableRow2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -39,7 +65,7 @@
             android:textColor="#fff"
             android:textSize="18sp"/>
 
-        <Space android:layout_width="15dp"/>
+        <Space android:layout_width="10dp"/>
 
         <Button
             android:id="@+id/btnFind"
