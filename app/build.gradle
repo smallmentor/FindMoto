@@ -30,5 +30,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     compile files('libs/libusbeaconapp.jar')
     compile files('libs/thlutil.jar')
+    implementation 'com.google.android.gms:play-services-location:16.0.0'
     implementation 'com.android.support:design:26.1.0'
 }

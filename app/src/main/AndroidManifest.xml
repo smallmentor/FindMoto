@@ -38,12 +38,10 @@
             android:name=".CorrectionActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.UIMain"
+            android:name=".ui.AddBeacon"
             android:screenOrientation="portrait" />
         <activity
             android:name=".BeaconDetailActivity"
-            android:screenOrientation="portrait" />
-        <activity android:name=".FindActivity"
             android:screenOrientation="portrait" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -57,6 +55,9 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
+        <activity
+            android:name=".FindActivity"
+            android:label="@string/title_activity_maps"></activity>
     </application>
 
 </manifest>
