@@ -1,11 +1,8 @@
 package tw.edu.stust.slm.findmoto;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -14,9 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Rect;
 import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
-import android.media.session.PlaybackState;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,7 +26,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.FocusFinder;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +46,7 @@ import com.THLight.USBeacon.App.Lib.iBeaconScanManager;
 import java.util.ArrayList;
 import java.util.List;
 
-import tw.edu.stust.slm.findmoto.ui.UIMain;
+import tw.edu.stust.slm.findmoto.ui.AddBeacon;
 
 public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, iBeaconScanManager.OniBeaconScan {
@@ -180,7 +174,7 @@ public class MenuActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent it = new Intent();
-                it.setClass(MenuActivity.this,UIMain.class);
+                it.setClass(MenuActivity.this,AddBeacon.class);
                 startActivity(it);
             }
         });
@@ -392,6 +386,7 @@ public class MenuActivity extends AppCompatActivity
             settingLayout.setVisibility(View.VISIBLE);
 
         } else if (id == R.id.nav_share) {
+
 
         } else if (id == R.id.nav_end) {
             this.finish();

@@ -17,8 +17,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -38,7 +36,6 @@ import com.THLight.USBeacon.App.Lib.BatteryPowerData;
 import com.THLight.USBeacon.App.Lib.USBeaconConnection;
 import com.THLight.USBeacon.App.Lib.USBeaconData;
 import com.THLight.USBeacon.App.Lib.USBeaconList;
-import com.THLight.USBeacon.App.Lib.USBeaconServerInfo;
 import com.THLight.USBeacon.App.Lib.iBeaconData;
 import com.THLight.USBeacon.App.Lib.iBeaconScanManager;
 import tw.edu.stust.slm.findmoto.R;
@@ -48,7 +45,7 @@ import tw.edu.stust.slm.findmoto.THLConfig;
 import com.THLight.Util.THLLog;
 
 /** ============================================================== */
-public class UIMain extends Activity implements iBeaconScanManager.OniBeaconScan, USBeaconConnection.OnResponse
+public class AddBeacon extends Activity implements iBeaconScanManager.OniBeaconScan, USBeaconConnection.OnResponse
 {
 	/** this UUID is generate by Server while register a new account. */
 	final UUID QUERY_UUID		= UUID.fromString("BB746F72-282F-4378-9416-89178C1019FC");
@@ -135,18 +132,18 @@ public class UIMain extends Activity implements iBeaconScanManager.OniBeaconScan
 							System.out.println("USBeaconConnection.MSG_HAS_UPDATE-1");
 							mBServer.downloadBeaconListFile();
 							System.out.println("USBeaconConnection.MSG_HAS_UPDATE-2");
-							Toast.makeText(UIMain.this, "HAS_UPDATE.", Toast.LENGTH_SHORT).show();
+							Toast.makeText(AddBeacon.this, "HAS_UPDATE.", Toast.LENGTH_SHORT).show();
 							break;
 							
 						case USBeaconConnection.MSG_HAS_NO_UPDATE:
-							Toast.makeText(UIMain.this, "No new BeaconList.", Toast.LENGTH_SHORT).show();
+							Toast.makeText(AddBeacon.this, "No new BeaconList.", Toast.LENGTH_SHORT).show();
 							break;
 							
 						case USBeaconConnection.MSG_DOWNLOAD_FINISHED:
 							break;
 
 						case USBeaconConnection.MSG_DOWNLOAD_FAILED:
-							Toast.makeText(UIMain.this, "Download file failed!", Toast.LENGTH_SHORT).show();
+							Toast.makeText(AddBeacon.this, "Download file failed!", Toast.LENGTH_SHORT).show();
 							break;
 
 						case USBeaconConnection.MSG_DATA_UPDATE_FINISHED:
@@ -155,18 +152,18 @@ public class UIMain extends Activity implements iBeaconScanManager.OniBeaconScan
 
 								if(null == BList)
 								{
-									Toast.makeText(UIMain.this, "Data Updated failed.", Toast.LENGTH_SHORT).show();
+									Toast.makeText(AddBeacon.this, "Data Updated failed.", Toast.LENGTH_SHORT).show();
 									THLLog.d("debug", "update failed.");
 								}
 								else if(BList.getList().isEmpty())
 								{
-									Toast.makeText(UIMain.this, "Data Updated but empty.", Toast.LENGTH_SHORT).show();
+									Toast.makeText(AddBeacon.this, "Data Updated but empty.", Toast.LENGTH_SHORT).show();
 									THLLog.d("debug", "this account doesn't contain any devices.");
 								}
 								else
 								{
 								    String BeaconData = "";
-									Toast.makeText(UIMain.this, "Data Updated("+ BList.getList().size()+ ")", Toast.LENGTH_SHORT).show();
+									Toast.makeText(AddBeacon.this, "Data Updated("+ BList.getList().size()+ ")", Toast.LENGTH_SHORT).show();
 
 									for(USBeaconData data : BList.getList())
 									{
@@ -180,7 +177,7 @@ public class UIMain extends Activity implements iBeaconScanManager.OniBeaconScan
 							break;
 
 						case USBeaconConnection.MSG_DATA_UPDATE_FAILED:
-							Toast.makeText(UIMain.this, "UPDATE_FAILED!", Toast.LENGTH_SHORT).show();
+							Toast.makeText(AddBeacon.this, "UPDATE_FAILED!", Toast.LENGTH_SHORT).show();
 							break;
 					}
 					break;
@@ -261,8 +258,8 @@ public class UIMain extends Activity implements iBeaconScanManager.OniBeaconScan
 			cv.put("mac", tV_mac.getText().toString());
 
 			//檢查輸入規則
-			final EditText et = new EditText(UIMain.this);
-			new AlertDialog.Builder(UIMain.this).setTitle("命名裝置(請勿超過8個字元)")
+			final EditText et = new EditText(AddBeacon.this);
+			new AlertDialog.Builder(AddBeacon.this).setTitle("命名裝置(請勿超過8個字元)")
 					.setView(et)
 					.setPositiveButton("確定", new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
@@ -276,8 +273,8 @@ public class UIMain extends Activity implements iBeaconScanManager.OniBeaconScan
 							}
 							else {
 								cv.put("name", input);
-								final EditText et = new EditText(UIMain.this);
-								new AlertDialog.Builder(UIMain.this).setTitle("輸入描述(請勿超過30個字元)")
+								final EditText et = new EditText(AddBeacon.this);
+								new AlertDialog.Builder(AddBeacon.this).setTitle("輸入描述(請勿超過30個字元)")
 										.setView(et)
 										.setPositiveButton("確定", new DialogInterface.OnClickListener() {
 											public void onClick(DialogInterface dialog, int which) {
@@ -398,7 +395,7 @@ public class UIMain extends Activity implements iBeaconScanManager.OniBeaconScan
 
     public void showBeaconFromServerOnDialog(String sBeaconDate)
     {
-        final AlertDialog dlg = new AlertDialog.Builder(UIMain.this).create();
+        final AlertDialog dlg = new AlertDialog.Builder(AddBeacon.this).create();
 
         dlg.setTitle("Beacon from Server. " + QUERY_UUID);
         dlg.setMessage(sBeaconDate);
