@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FindActivity">
+
+    <TextView
+        android:id="@+id/tV_rssi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btn_endFind"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="40dp"
+        android:layout_toStartOf="@+id/imageView2"
+        android:text="訊號強度：???? dBm" />
+
+    <TextView
+        android:id="@+id/tV_direction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="5dp"
+        android:gravity="center_horizontal"
+        android:text="搜尋中..."
+        android:textColor="@color/colorContentText"
+        android:textSize="30sp" />
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/pgb_dist"
+        android:layout_below="@+id/tV_direction"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="10dp"
+        tools:context=".FindActivity" />
+
+    <ProgressBar
+        android:id="@+id/pgb_dist"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/imageView1"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="5dp"
+        android:max="1000"
+        android:progress="50"
+        android:progressTint="@color/colorLightPrimary" />
+
+    <Button
+        android:id="@+id/btn_endFind"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="110dp"
+        android:layout_marginEnd="110dp"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/button_style"
+        android:text="結 束 搜 尋"
+        android:textColor="#fff"
+        android:textSize="26sp" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="26dp"
+        android:layout_height="32dp"
+        android:layout_above="@+id/btn_endFind"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="2dp"
+        android:layout_marginBottom="40dp"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/male_invert" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="26dp"
+        android:layout_height="32dp"
+        android:layout_above="@+id/btn_endFind"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="40dp"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/vespa_invert" />
+
+    <TextView
+        android:id="@+id/tV_dist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btn_endFind"
+        android:layout_marginStart="15dp"
+        android:layout_marginBottom="40dp"
+        android:layout_toEndOf="@+id/imageView1"
+        android:text="大約距離：??.?? 公尺" />
+</RelativeLayout>
