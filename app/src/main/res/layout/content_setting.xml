@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,13 +11,35 @@
     android:background="@color/colorBackground" >
 
     <TextView
+        android:id="@+id/tV_defaultNameSet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:text="目前選擇裝置："
+        android:textColor="@color/colorContentText"
+        android:textSize="16sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tV_defaultNameSet"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
         android:text="如果您感到訊號或尋車功能已經不準確，可能是裝置電量較低造成的不穩定狀況，請用此功能來重新矯正合適的訊號。"/>
 
     <TableRow
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp">
         <Button
             android:layout_weight="1"
             android:layout_height="wrap_content"
@@ -27,7 +49,7 @@
             android:textColor="#fff"
             android:textSize="18sp"/>
 
-        <Space android:layout_width="15dp"/>
+        <Space android:layout_width="10dp"/>
 
         <Button
             android:layout_weight="1"
@@ -38,4 +60,4 @@
             android:textColor="#fff"
             android:textSize="18sp"/>
     </TableRow>
-</TableLayout>
+</RelativeLayout>

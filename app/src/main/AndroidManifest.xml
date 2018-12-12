@@ -36,6 +36,7 @@
         </activity>
         <activity
             android:name=".CorrectionActivity"
+            android:label="@string/title_activity_correction"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.AddBeacon"
@@ -57,7 +58,7 @@
 
         <activity
             android:name=".FindActivity"
-            android:label="@string/title_activity_maps" />
+            android:label="@string/title_activity_find" />
 
         <receiver android:name=".GetLocationWidget">
             <intent-filter>

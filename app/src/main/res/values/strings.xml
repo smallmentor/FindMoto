@@ -8,9 +8,9 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_start">StartActivity</string>
     <string name="title_activity_list">ListActivity</string>
-    <string name="title_activity_correction">CorrectionActivity</string>
+    <string name="title_activity_correction">矯正精準度</string>
     <string name="database_name">test2DB.db</string>
-    <string name="title_activity_find">Find</string>
+    <string name="title_activity_find">搜尋裝置</string>
     <string name="title_activity_maps">Map</string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>

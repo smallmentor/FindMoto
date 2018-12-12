@@ -15,7 +15,7 @@
         <item
             android:id="@+id/nav_setting"
             android:icon="@drawable/ic_menu_manage"
-            android:title="矯正範圍" />
+            android:title="矯正精準度" />
     </group>
 
     <item android:title="系統">

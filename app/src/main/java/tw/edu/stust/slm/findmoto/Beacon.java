@@ -4,12 +4,13 @@ import android.bluetooth.BluetoothDevice;
 import android.os.ParcelUuid;
 
 public class Beacon {
-    private String name;
-    private ParcelUuid[] uuid;
-    private String macAddress;
-    private int rssi;
-    private int txPower;
-    private double lestDist = 0;
+    private String          name;
+    private ParcelUuid[]    uuid;
+    private String          macAddress;
+    private int             rssi;
+    private int             txPower;
+    private double          lestDist = 0;
+    private double          shieldVar   = 2.0;
 
     Beacon(BluetoothDevice device){
         this.name       = device.getName();
@@ -27,9 +28,10 @@ public class Beacon {
 
     public double getDistance1() {
         int absRssi = Math.abs(rssi);
-        double power = (absRssi-59)/(10*2.0);
+        double power = (absRssi - 59) / (10 * shieldVar);
         return Math.pow(10,power);
     }
+
 
     public double getDistance2() {
         if (rssi == 0)

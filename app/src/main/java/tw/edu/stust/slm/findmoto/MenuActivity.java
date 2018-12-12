@@ -56,6 +56,7 @@ public class MenuActivity extends AppCompatActivity
     ListView beacon_List;
     FloatingActionButton fabAdd;
     SharedPreferences spLocation;
+    TextView tV_defaultNameStart,tV_defaultNameSet;
 
     BLEListAdapter listAdapter = null;
     SQLiteDatabase db;
@@ -143,26 +144,30 @@ public class MenuActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         //初始化
-        startLayout = findViewById(R.id.contentStart);
-        listLayout = findViewById(R.id.contentList);
-        settingLayout = findViewById(R.id.contentSetting);
+        startLayout         = findViewById(R.id.contentStart);
+        listLayout          = findViewById(R.id.contentList);
+        settingLayout       = findViewById(R.id.contentSetting);
 
-        btnGotoList_start = findViewById(R.id.btnGotoList_start);
+        btnGotoList_start   = findViewById(R.id.btnGotoList_start);
         btnGotoList_setting = findViewById(R.id.btnGotoList_setting);
 
-        btnFind = findViewById(R.id.btnFind);
+        btnFind             = findViewById(R.id.btnFind);
 
-        btnGetLocation = findViewById(R.id.btnGetLocation);
-        btnStartCorrection = findViewById(R.id.btnStartCorrection);
+        btnGetLocation      = findViewById(R.id.btnGetLocation);
+        btnStartCorrection  = findViewById(R.id.btnStartCorrection);
+
+        tV_defaultNameStart = findViewById(R.id.tV_defaultNameStart);
+        tV_defaultNameSet   = findViewById(R.id.tV_defaultNameSet);
+
         //浮動按鈕
-        fabAdd = findViewById(R.id.fabAdd);
+        fabAdd              = findViewById(R.id.fabAdd);
 
         //裝置清單
-        beacon_List = findViewById(R.id.beacon_List);
+        beacon_List         = findViewById(R.id.beacon_List);
 
-        spLocation = getSharedPreferences("location", MODE_PRIVATE);
+        spLocation          = getSharedPreferences("location", MODE_PRIVATE);
 
-        miScaner		= new iBeaconScanManager(this, this);
+        miScaner            = new iBeaconScanManager(this, this);
 
         //事件
         btnGotoList_setting.setOnClickListener(btnGoToListClick);
@@ -203,7 +208,17 @@ public class MenuActivity extends AppCompatActivity
         btnStartCorrection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Cursor cursor = db.rawQuery("select * from test ", null);
+
                 Intent it = new Intent();
+
+                for(int i=0;i<cursor.getCount();i++) {
+                    cursor.moveToPosition(i);
+                    if(cursor.getString(4).equals("true")){
+                        it.putExtra("name",cursor.getString(1));
+                        it.putExtra("mac",cursor.getString(3));
+                    }
+                }
                 it.setClass(MenuActivity.this,CorrectionActivity.class);
                 startActivity(it);
             }
@@ -252,6 +267,7 @@ public class MenuActivity extends AppCompatActivity
                 Rect r = new Rect();
                 Window window = getWindow();
                 window.getDecorView().getWindowVisibleDisplayFrame(r);
+
 //                int iStatusBatHight = r.top;//Status高度
                 int iStatusBarPlusActionBarHeight = getWindow().findViewById(Window.ID_ANDROID_CONTENT).getTop();
                 DisplayMetrics dm = new DisplayMetrics();
@@ -262,6 +278,9 @@ public class MenuActivity extends AppCompatActivity
                 beacon_List.setLayoutParams(lp);
             }
         });
+
+        //畫面顯示目前選擇裝置
+        tV_defaultNameStart.setText("目前選擇裝置：" + getDefaulName());
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -285,6 +304,7 @@ public class MenuActivity extends AppCompatActivity
         startLayout.setVisibility(View.GONE);
         listLayout.setVisibility(View.VISIBLE);
         settingLayout.setVisibility(View.GONE);
+        setTitle("裝置清單");
 
         mHandler.sendEmptyMessageDelayed(MSG_UPDATE_BEACON_LIST, 500);
     }
@@ -376,6 +396,8 @@ public class MenuActivity extends AppCompatActivity
             startLayout.setVisibility(View.VISIBLE);
             listLayout.setVisibility(View.GONE);
             settingLayout.setVisibility(View.GONE);
+            tV_defaultNameStart.setText("目前選擇裝置：" + getDefaulName());
+            setTitle(R.string.app_name);
 
         } else if (id == R.id.nav_list) {
             goToList();
@@ -384,6 +406,8 @@ public class MenuActivity extends AppCompatActivity
             startLayout.setVisibility(View.GONE);
             listLayout.setVisibility(View.GONE);
             settingLayout.setVisibility(View.VISIBLE);
+            tV_defaultNameSet.setText("目前選擇裝置：" + getDefaulName());
+            setTitle("矯正精準度");
 
         } else if (id == R.id.nav_share) {
 
@@ -404,6 +428,13 @@ public class MenuActivity extends AppCompatActivity
             if (readPermission !=PackageManager.PERMISSION_GRANTED)
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},2);
         }
+    }
+
+    private String getDefaulName() {
+        Cursor cursor = db.rawQuery("select * from test where defaul = 'true'", null);
+        cursor.moveToFirst();
+        String name = cursor.getString(1);
+        return name;
     }
 
     //驗證iBeacon
@@ -478,6 +509,7 @@ public class MenuActivity extends AppCompatActivity
         beacon.lastUpdate= currTime;
     }
 
+    //取得定位權限
     private void requestLocationPermission(){
         if(Build.VERSION.SDK_INT >=23) {
             int readPermission = checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
