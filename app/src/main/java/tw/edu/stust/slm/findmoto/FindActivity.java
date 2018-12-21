@@ -49,9 +49,8 @@ import java.util.ArrayList;
 
 public class FindActivity extends FragmentActivity implements OnMapReadyCallback,LocationListener,GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
-    final int REQUEST_ENABLE_BT = 2000;
-
     final int MSG_UPDATE_RSSI = 1000;
+    final int REQUEST_ENABLE_BT = 2000;
 
     final int DIST_ARRAY_MAX_SIZE = 4;
 
@@ -66,6 +65,7 @@ public class FindActivity extends FragmentActivity implements OnMapReadyCallback
     Beacon beacon;
     BluetoothGatt bluetoothGatt;
     String name,mac;
+    int atOneMeter;
     private Location mLastLocation;
     private GoogleApiClient mGoogleApiClient;
     ArrayList<String> distArray = new ArrayList<String>();
@@ -118,31 +118,16 @@ public class FindActivity extends FragmentActivity implements OnMapReadyCallback
                     .build();
         }
 
-        //判斷裝置是否支援超低耗藍芽
-        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-            new AlertDialog.Builder(this)
-                    .setTitle("裝置不支援")
-                    .setMessage("您的裝置不支援超低耗藍芽(BLE)！無法使用此軟體！")
-                    .setPositiveButton("確定", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            finish();
-                        }
-                    })
-                    .show()//改選項顏色
-                    .getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        //判斷是否有藍芽，若沒開起就要求使用者開啟藍芽
+        if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
 
         //取得BluetoothAdapter
         final BluetoothManager bluetoothManager =
                 (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter = bluetoothManager.getAdapter();
-
-        //判斷是否有藍芽，若沒開起就要求使用者開啟藍芽
-        if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-        }
 
         //請求取得定位權限
         if (Build.VERSION.SDK_INT >= 23) {
@@ -165,6 +150,7 @@ public class FindActivity extends FragmentActivity implements OnMapReadyCallback
         Intent it   = getIntent();
         name        = it.getStringExtra("name");
         mac         = it.getStringExtra("mac");
+        atOneMeter  = it.getIntExtra("atOneMeter",59);
         setTitle(name);
     }
 
@@ -218,8 +204,10 @@ public class FindActivity extends FragmentActivity implements OnMapReadyCallback
                 int txPower = result.getTxPower();
                 Log.d("scanCallback","是");
                 //如果是第一次掃到beacon就新增，否則更新Rssi及TxPower
-                if(beacon == null)
+                if(beacon == null) {
                     beacon = new Beacon(device,rssi,txPower);
+                    beacon.setAtOneMeter(atOneMeter);
+                }
                 else{
                     beacon.setRssi(rssi);
                     beacon.setTxPower(txPower);
@@ -254,9 +242,9 @@ public class FindActivity extends FragmentActivity implements OnMapReadyCallback
                     newDist += Double.valueOf(distArray.get(i));
                 }
                 newDist = newDist / (DIST_ARRAY_MAX_SIZE-2);
-                BigDecimal bdDist = new BigDecimal(newDist);
 
                 newDist = 0.75 * newDist + (1-0.75) * lestDist;// 平滑訊號
+                BigDecimal bdDist = new BigDecimal(newDist);
 
                 //顯示
                 double dist = Double.valueOf(bdDist.setScale(2,BigDecimal.ROUND_HALF_UP)+"");

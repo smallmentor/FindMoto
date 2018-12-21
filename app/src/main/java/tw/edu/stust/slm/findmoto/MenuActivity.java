@@ -197,6 +197,7 @@ public class MenuActivity extends AppCompatActivity
                     if(cursor.getString(4).equals("true")){
                         it.putExtra("name",cursor.getString(1));
                         it.putExtra("mac",cursor.getString(3));
+                        it.putExtra("atOneMeter",cursor.getInt(5));
                     }
                 }
                 it.setClass(MenuActivity.this,FindActivity.class);
@@ -243,7 +244,8 @@ public class MenuActivity extends AppCompatActivity
                 "name text, " +
                 "detail text, " +
                 "mac text, " +
-                "defaul text)";
+                "defaul text, " +
+                "atOneMeter integer)";
 
         db.execSQL(createTable);
         showData();
@@ -432,7 +434,11 @@ public class MenuActivity extends AppCompatActivity
 
     private String getDefaulName() {
         Cursor cursor = db.rawQuery("select * from test where defaul = 'true'", null);
-        cursor.moveToFirst();
+
+        //cursor.moveToFirst()若資料庫內無資料會回傳false
+        if(!cursor.moveToFirst()) {
+            return "無裝置可用";
+        }
         String name = cursor.getString(1);
         return name;
     }

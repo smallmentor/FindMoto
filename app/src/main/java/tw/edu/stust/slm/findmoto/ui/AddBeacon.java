@@ -203,7 +203,8 @@ public class AddBeacon extends Activity implements iBeaconScanManager.OniBeaconS
 				"name text, " +
 				"detail text, " +
 				"mac text, " +
-				"defaul text)";
+				"defaul text, " +
+				"atOneMeter integer)";
 
         db.execSQL(createTable);
 

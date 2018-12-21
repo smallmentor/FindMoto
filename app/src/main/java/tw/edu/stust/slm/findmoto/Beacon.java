@@ -10,7 +10,7 @@ public class Beacon {
     private int             rssi;
     private int             txPower;
     private double          lestDist = 0;
-    private double          shieldVar   = 2.0;
+    private int             atOneMeter = 59;
 
     Beacon(BluetoothDevice device){
         this.name       = device.getName();
@@ -28,7 +28,7 @@ public class Beacon {
 
     public double getDistance1() {
         int absRssi = Math.abs(rssi);
-        double power = (absRssi - 59) / (10 * shieldVar);
+        double power = (absRssi - atOneMeter) / (10 * 2.0);
         return Math.pow(10,power);
     }
 
@@ -94,5 +94,13 @@ public class Beacon {
 
     public void setLestDist(double lestDist) {
         this.lestDist = lestDist;
+    }
+
+    public int getAtOneMeter() {
+        return atOneMeter;
+    }
+
+    public void setAtOneMeter(int atOneMeter) {
+        this.atOneMeter = atOneMeter;
     }
 }

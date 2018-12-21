@@ -73,8 +73,8 @@ public class BeaconDetailActivity extends AppCompatActivity {
                 "name text, " +
                 "detail text, " +
                 "mac text, " +
-                "defaul text)";
-
+                "defaul text, " +
+                "atOneMeter integer)";
         db.execSQL(createTable);
 
         //取出點選的資料
@@ -129,7 +129,7 @@ public class BeaconDetailActivity extends AppCompatActivity {
                     .setNegativeButton("取消", null)
                     .show();
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(BeaconDetailActivity.this,R.color.colorPrimary));
-            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.LTGRAY);
         }
     };
 
