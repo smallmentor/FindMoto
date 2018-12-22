@@ -9,11 +9,13 @@ import android.bluetooth.BluetoothManager;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.icu.math.BigDecimal;
 import android.location.Criteria;
 import android.location.Location;
@@ -85,13 +87,18 @@ public class FindActivity extends FragmentActivity implements OnMapReadyCallback
         }
     };
 
-    Runnable runnable = new Runnable() {
+//    Runnable runnable = new Runnable() {
+//        @Override
+//        public void run() {
+//            scanBeacon(true);
+//        }
+//    };
+    Runnable runnableSetEnabled = new Runnable() {
         @Override
         public void run() {
-            scanBeacon(true);
+            tV_direction.setText("已找到");
         }
     };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,8 +149,19 @@ public class FindActivity extends FragmentActivity implements OnMapReadyCallback
         btn_endFind.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                scanBeacon(false);
-                scanBeacon(true);
+                AlertDialog dialog = new AlertDialog.Builder(FindActivity.this)
+                        .setTitle("結束搜尋")
+                        .setMessage("確定要結束尋車嗎?")
+                        .setPositiveButton("確定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("取消", null)
+                        .show();
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(FindActivity.this,R.color.colorPrimary));
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.LTGRAY);
             }
         });
 
@@ -157,8 +175,16 @@ public class FindActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onStart() {
         super.onStart();
-        scanBeacon(true);
+//        scanBeacon(true);
         mGoogleApiClient.connect();
+        //連接藍芽
+        BluetoothDevice bluetoothDevice = mBluetoothAdapter.getRemoteDevice(mac);
+        if(bluetoothGatt != null){
+            bluetoothGatt.close();
+            bluetoothGatt = null;
+        }
+        Log.d("onStart","bluetoothConnect:" + mac);
+        bluetoothGatt = bluetoothDevice.connectGatt(FindActivity.this, false, mGattCallback);
     }
 
     @Override
@@ -171,7 +197,7 @@ public class FindActivity extends FragmentActivity implements OnMapReadyCallback
             bluetoothGatt.close();
             bluetoothGatt = null;
         }
-        scanBeacon(false);
+//        scanBeacon(false);
 
         //關閉google map
         if( mGoogleApiClient != null && mGoogleApiClient.isConnected() ) {
@@ -179,52 +205,78 @@ public class FindActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    private void scanBeacon(final boolean enable) {
-        final BluetoothLeScanner bluetoothLeScanner = mBluetoothAdapter.getBluetoothLeScanner();
-        if (enable){
-            Log.d("scanBeacon","開始搜尋");
-            bluetoothLeScanner.startScan(scanCallback);
-        }
-        else{
-            Log.d("scanBeacon","結束搜尋");
-            bluetoothLeScanner.stopScan(scanCallback);
-        }
+//    private void scanBeacon(final boolean enable) {
+//        final BluetoothLeScanner bluetoothLeScanner = mBluetoothAdapter.getBluetoothLeScanner();
+//        if (enable){
+//            Log.d("scanBeacon","開始搜尋");
+//            bluetoothLeScanner.startScan(scanCallback);
+//        }
+//        else{
+//            Log.d("scanBeacon","結束搜尋");
+//            bluetoothLeScanner.stopScan(scanCallback);
+//        }
+//
+//    }
 
-    }
-
-    private ScanCallback scanCallback = new ScanCallback() {
-        @Override
-        public void onScanResult(int callbackType, ScanResult result) {
-            BluetoothDevice device = result.getDevice();
-            Log.d("scanCallback",device.getAddress());
-            //判斷掃到的是不是我們要掃的beacon
-            if(device.getAddress().equals(mac)){
-
-                int rssi = result.getRssi();
-                int txPower = result.getTxPower();
-                Log.d("scanCallback","是");
-                //如果是第一次掃到beacon就新增，否則更新Rssi及TxPower
-                if(beacon == null) {
-                    beacon = new Beacon(device,rssi,txPower);
-                    beacon.setAtOneMeter(atOneMeter);
-                }
-                else{
-                    beacon.setRssi(rssi);
-                    beacon.setTxPower(txPower);
-                }
-                bluetoothGatt = device.connectGatt(FindActivity.this, false, mGattCallback);
-                Message msg= Message.obtain(mHandler,MSG_UPDATE_RSSI);
-                msg.sendToTarget();
-                scanBeacon(false);
-
-            }else{
-                Log.d("scanCallback","不是");
-//                tV_direction.setText("尚未搜索到裝置");
-            }
-        }
-    };
+//    private ScanCallback scanCallback = new ScanCallback() {
+//        @Override
+//        public void onScanResult(int callbackType, ScanResult result) {
+//            BluetoothDevice device = result.getDevice();
+//            Log.d("scanCallback",device.getAddress());
+//            //判斷掃到的是不是我們要掃的beacon
+//            if(device.getAddress().equals(mac)){
+//
+//                int rssi = result.getRssi();
+//                int txPower = result.getTxPower();
+//                Log.d("scanCallback","是");
+//                //如果是第一次掃到beacon就新增，否則更新Rssi及TxPower
+//                if(beacon == null) {
+//                    beacon = new Beacon(device,rssi,txPower);
+//                    beacon.setAtOneMeter(atOneMeter);
+//                }
+//                else{
+//                    beacon.setRssi(rssi);
+//                    beacon.setTxPower(txPower);
+//                }
+//                bluetoothGatt = device.connectGatt(FindActivity.this, false, mGattCallback);
+//                Message msg= Message.obtain(mHandler,MSG_UPDATE_RSSI);
+//                msg.sendToTarget();
+//                scanBeacon(false);
+//
+//            }else{
+//                Log.d("scanCallback","不是");
+////                tV_direction.setText("尚未搜索到裝置");
+//            }
+//        }
+//    };
 
     private BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
+        @Override
+        public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
+            super.onConnectionStateChange(gatt, status, newState);
+            if(status == BluetoothGatt.GATT_SUCCESS) {
+                if (newState == BluetoothGatt.STATE_DISCONNECTED) {
+                    Log.d("onConnectionStateChange","STATE_DISCONNECTED");
+                    if (bluetoothGatt != null){
+                        bluetoothGatt.close();// 釋放資源
+                        bluetoothGatt = null;
+                    }
+//                    mHandler.postDelayed(runnable, 400);
+                }else if(newState == BluetoothGatt.STATE_CONNECTED){
+                    Log.d("onConnectionStateChange","STATE_CONNECTED");
+                    beacon = new Beacon(gatt.getDevice());
+                    if(beacon.getLestDist() == 0) {
+                        Log.d("onConnectionStateChange","GATT_SUCCESS");
+                        mHandler.postDelayed(runnableSetEnabled,400);
+                        Message msg= Message.obtain(mHandler,MSG_UPDATE_RSSI);
+                        msg.sendToTarget();
+                        beacon.setAtOneMeter(atOneMeter);
+                        distArray.clear();
+                    }
+                }
+            }
+        }
+
         @Override
         public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {
             super.onReadRemoteRssi(gatt, rssi, status);
@@ -238,12 +290,12 @@ public class FindActivity extends FragmentActivity implements OnMapReadyCallback
                 double newDist = 0;
                 double lestDist = beacon.getLestDist();
 
-                for(int i = 1;i<=DIST_ARRAY_MAX_SIZE-1;i++){
+                for(int i = 1;i<DIST_ARRAY_MAX_SIZE-1;i++){
                     newDist += Double.valueOf(distArray.get(i));
                 }
                 newDist = newDist / (DIST_ARRAY_MAX_SIZE-2);
 
-                newDist = 0.75 * newDist + (1-0.75) * lestDist;// 平滑訊號
+//                newDist = 0.75 * newDist + (1-0.75) * lestDist;// 平滑訊號
                 BigDecimal bdDist = new BigDecimal(newDist);
 
                 //顯示
@@ -257,8 +309,8 @@ public class FindActivity extends FragmentActivity implements OnMapReadyCallback
 //                tV_direction.setText(progressNum);
 
                 //設定tV_direction顯示的內容
-                if(newDist-0.5 < lestDist && lestDist < newDist+0.5){
-                    Log.d("tV_direction","誤差50公分以內");
+                if(newDist-0.3 < lestDist && lestDist < newDist+0.3){
+                    Log.d("tV_direction","誤差30公分以內");
                 }else if(newDist < lestDist){
                     tV_direction.setText("方向正確");
                     tV_direction.setTextColor(ContextCompat.getColor(FindActivity.this,R.color.colorSuccess));
@@ -269,23 +321,6 @@ public class FindActivity extends FragmentActivity implements OnMapReadyCallback
                 beacon.setLestDist(newDist);
             }
             tV_rssi.setText("訊號強度：" + rssi + " dBm");
-        }
-
-        @Override
-        public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-            super.onConnectionStateChange(gatt, status, newState);
-            if(status == BluetoothGatt.GATT_SUCCESS) {
-                if (newState == BluetoothGatt.STATE_DISCONNECTED) {
-                    Log.d("onConnectionStateChange","STATE_DISCONNECTED");
-                    if (bluetoothGatt != null){
-                        bluetoothGatt.close();// 釋放資源
-                        bluetoothGatt = null;
-                    }
-                    mHandler.postDelayed(runnable, 400);
-                }else if(newState == BluetoothGatt.STATE_CONNECTED){
-                    Log.d("onConnectionStateChange","STATE_CONNECTED");
-                }
-            }
         }
     };
 

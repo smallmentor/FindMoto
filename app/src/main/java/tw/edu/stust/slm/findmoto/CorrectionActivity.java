@@ -47,7 +47,6 @@ public class CorrectionActivity extends AppCompatActivity {
     String name,mac;
 
     SQLiteDatabase db;
-    Beacon beacon;
     ArrayList<String> distArray = new ArrayList<String>();
     double lestRssi = 0;
 
@@ -138,9 +137,6 @@ public class CorrectionActivity extends AppCompatActivity {
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             }
         }
-
-
-
     }
 
     @Override
@@ -148,14 +144,13 @@ public class CorrectionActivity extends AppCompatActivity {
         super.onStart();
 //        scanBeacon(true);
 
-        BluetoothDevice bluetoothDeviceOne = mBluetoothAdapter.getRemoteDevice(mac);
+        BluetoothDevice bluetoothDevice = mBluetoothAdapter.getRemoteDevice(mac);
         if(bluetoothGatt != null){
-            Log.d("onCreate","bluetoothGatt not null");
             bluetoothGatt.close();
             bluetoothGatt = null;
         }
 
-        bluetoothGatt = bluetoothDeviceOne.connectGatt(CorrectionActivity.this, false, mGattCallback);
+        bluetoothGatt = bluetoothDevice.connectGatt(CorrectionActivity.this, false, mGattCallback);
     }
 
     @Override
@@ -251,7 +246,7 @@ public class CorrectionActivity extends AppCompatActivity {
 
                 //distArray滿的話
                 double newRssi = 0;
-                for(int i = 1;i<=DIST_ARRAY_MAX_SIZE-1;i++) {
+                for(int i = 1;i<DIST_ARRAY_MAX_SIZE-1;i++) {
                     newRssi += Integer.valueOf(distArray.get(i));
                 }
                 newRssi = newRssi / (DIST_ARRAY_MAX_SIZE-2);
@@ -262,7 +257,7 @@ public class CorrectionActivity extends AppCompatActivity {
                 }
 
                 //取出上次訊號並平滑
-                newRssi = 0.75 * newRssi + 0.25 * lestRssi;
+//                newRssi = 0.75 * newRssi + 0.25 * lestRssi;
                 BigDecimal bdRssi = new BigDecimal(newRssi);
                 double smoothRssi = Double.valueOf(bdRssi.setScale(0,BigDecimal.ROUND_HALF_UP)+"");
                 Log.d("mGattCallback","smoothRssi：" + smoothRssi);
