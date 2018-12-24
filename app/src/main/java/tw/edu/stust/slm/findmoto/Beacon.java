@@ -28,7 +28,7 @@ public class Beacon {
 
     public double getDistance1() {
         int absRssi = Math.abs(rssi);
-        double power = (absRssi - atOneMeter) / (10 * 2.0);
+        double power = (absRssi - atOneMeter) / 20;
         return Math.pow(10,power);
     }
 

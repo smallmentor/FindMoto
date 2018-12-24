@@ -38,6 +38,9 @@ import com.THLight.USBeacon.App.Lib.USBeaconData;
 import com.THLight.USBeacon.App.Lib.USBeaconList;
 import com.THLight.USBeacon.App.Lib.iBeaconData;
 import com.THLight.USBeacon.App.Lib.iBeaconScanManager;
+
+import tw.edu.stust.slm.findmoto.CorrectionActivity;
+import tw.edu.stust.slm.findmoto.MenuActivity;
 import tw.edu.stust.slm.findmoto.R;
 import tw.edu.stust.slm.findmoto.ScanediBeacon;
 import tw.edu.stust.slm.findmoto.THLApp;
@@ -253,10 +256,8 @@ public class AddBeacon extends Activity implements iBeaconScanManager.OniBeaconS
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
             TextView tV_mac = view.findViewById(R.id.tV_mac);
-            String name = "";
-            String detail = "";
 
-			cv.put("mac", tV_mac.getText().toString());
+			final String mac = tV_mac.getText().toString();
 
 			//檢查輸入規則
 			final EditText et = new EditText(AddBeacon.this);
@@ -264,30 +265,33 @@ public class AddBeacon extends Activity implements iBeaconScanManager.OniBeaconS
 					.setView(et)
 					.setPositiveButton("確定", new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
-							String input = et.getText().toString();
+							final String name = et.getText().toString();
 							Log.d("命名裝置","if前");
-							if ("".equals(input)) {
+							if ("".equals(name)) {
 								Toast.makeText(getApplicationContext(), "內容不能為空！", Toast.LENGTH_LONG).show();
 							}
-							else if(input.length()>8){
+							else if(name.length()>8){
 								Toast.makeText(getApplicationContext(), "請勿超過8個字元！", Toast.LENGTH_LONG).show();
 							}
 							else {
-								cv.put("name", input);
+
 								final EditText et = new EditText(AddBeacon.this);
 								new AlertDialog.Builder(AddBeacon.this).setTitle("輸入描述(請勿超過30個字元)")
 										.setView(et)
 										.setPositiveButton("確定", new DialogInterface.OnClickListener() {
 											public void onClick(DialogInterface dialog, int which) {
-												String input = et.getText().toString();
+												String detail = et.getText().toString();
 												Log.d("輸入描述","if前");
-												if(input.length()>30){
+												if(detail.length()>30){
 													Toast.makeText(getApplicationContext(), "請勿超過30個字元！", Toast.LENGTH_LONG).show();
 												}
 												else {
-													cv.put("detail", input);
+													//輸入資料
+													cv.put("name", name);
+													cv.put("detail", detail);
 													cv.put("defaul","true");
-
+													cv.put("mac", mac);
+													cv.put("atOneMeter",59); //預設值59
 													//先把其他裝置預設取消
 													Cursor cursor = db.rawQuery("select * from test ", null);
 													if (cursor.getCount() > 0) {  //如果沒有資料則離開
@@ -304,6 +308,13 @@ public class AddBeacon extends Activity implements iBeaconScanManager.OniBeaconS
 													//設新增的為預設裝置
 													db.insert("test", null, cv);
 													cv.clear();
+
+													//去矯正精準度畫面
+													Intent it = new Intent();
+													it.putExtra("name",name);
+													it.putExtra("mac",mac);
+													it.setClass(AddBeacon.this,CorrectionActivity.class);
+													startActivity(it);
 													finish();
 												}
 											}
@@ -361,7 +372,7 @@ public class AddBeacon extends Activity implements iBeaconScanManager.OniBeaconS
   	}
 
     /** ================================================ */
-    /** implementation of {@link iBeaconScanManager#OniBeaconScan } */
+
 	@Override
 	public void onScaned(iBeaconData iBeacon)
 	{
@@ -371,7 +382,7 @@ public class AddBeacon extends Activity implements iBeaconScanManager.OniBeaconS
 		}
 	}
 	/** ================================================ */
-    /** implementation of {@link iBeaconScanManager#OniBeaconScan } */
+
 	@Override
 	public void onBatteryPowerScaned(BatteryPowerData batteryPowerData) {
 		// TODO Auto-generated method stub

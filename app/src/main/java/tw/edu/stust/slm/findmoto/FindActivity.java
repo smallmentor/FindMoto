@@ -1,6 +1,7 @@
 package tw.edu.stust.slm.findmoto;
 
 import android.Manifest;
+import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
@@ -24,6 +25,8 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
@@ -71,6 +74,7 @@ public class FindActivity extends FragmentActivity implements OnMapReadyCallback
     private Location mLastLocation;
     private GoogleApiClient mGoogleApiClient;
     ArrayList<String> distArray = new ArrayList<String>();
+    boolean devicFound = false;
 
     Handler mHandler = new Handler() {
         @Override
@@ -87,12 +91,30 @@ public class FindActivity extends FragmentActivity implements OnMapReadyCallback
         }
     };
 
-//    Runnable runnable = new Runnable() {
-//        @Override
-//        public void run() {
-//            scanBeacon(true);
-//        }
-//    };
+    Runnable foundRunnable = new Runnable() {
+        @Override
+        public void run() {
+            //震動
+            Vibrator myVibrator = (Vibrator) getApplication().getSystemService(Service.VIBRATOR_SERVICE);
+            VibrationEffect vibrationEffect = VibrationEffect.createWaveform(new long[]{10, 300, 50, 300},-1);
+            myVibrator.vibrate(vibrationEffect);
+
+            //對話框
+            AlertDialog dialog = new AlertDialog.Builder(FindActivity.this)
+                    .setTitle("搜尋裝置")
+                    .setMessage("機車已在手機方圓兩公尺內，是否結束搜尋?")
+                    .setPositiveButton("確定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            finish();
+                        }
+                    })
+                    .setNegativeButton("繼續尋找", null)
+                    .show();
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(FindActivity.this,R.color.colorPrimary));
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.LTGRAY);
+        }
+    };
     Runnable runnableSetEnabled = new Runnable() {
         @Override
         public void run() {
@@ -295,7 +317,7 @@ public class FindActivity extends FragmentActivity implements OnMapReadyCallback
                 }
                 newDist = newDist / (DIST_ARRAY_MAX_SIZE-2);
 
-//                newDist = 0.75 * newDist + (1-0.75) * lestDist;// 平滑訊號
+                newDist = 0.75 * newDist + (1-0.75) * lestDist;// 平滑訊號
                 BigDecimal bdDist = new BigDecimal(newDist);
 
                 //顯示
@@ -309,7 +331,7 @@ public class FindActivity extends FragmentActivity implements OnMapReadyCallback
 //                tV_direction.setText(progressNum);
 
                 //設定tV_direction顯示的內容
-                if(newDist-0.3 < lestDist && lestDist < newDist+0.3){
+                if(newDist-0.4 < lestDist && lestDist < newDist+0.4){
                     Log.d("tV_direction","誤差30公分以內");
                 }else if(newDist < lestDist){
                     tV_direction.setText("方向正確");
@@ -319,8 +341,17 @@ public class FindActivity extends FragmentActivity implements OnMapReadyCallback
                     tV_direction.setTextColor(ContextCompat.getColor(FindActivity.this,R.color.colorError));
                 }
                 beacon.setLestDist(newDist);
+                tV_rssi.setText("訊號強度：" + rssi + " dBm");
+
+                //判斷是否進到一定範圍內
+                if(newDist>2.0) {
+                    devicFound = false;
+                }else if(devicFound == false){
+                    mHandler.post(foundRunnable);
+                    devicFound = true;
+                }
             }
-            tV_rssi.setText("訊號強度：" + rssi + " dBm");
+
         }
     };
 

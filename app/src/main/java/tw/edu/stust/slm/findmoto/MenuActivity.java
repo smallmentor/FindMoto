@@ -101,37 +101,6 @@ public class MenuActivity extends AppCompatActivity
                         mHandler.sendEmptyMessageDelayed(MSG_UPDATE_BEACON_LIST, 200);
                     }
                     break;
-
-                case MSG_SERVER_RESPONSE:
-                    switch(msg.arg1)
-                    {
-                        case USBeaconConnection.MSG_NETWORK_NOT_AVAILABLE:
-                            break;
-
-                        // Get the data from Server by the "QUERY_UUID"
-                        case USBeaconConnection.MSG_HAS_UPDATE:
-                            System.out.println("USBeaconConnection.MSG_HAS_UPDATE-1");
-                            mBServer.downloadBeaconListFile();
-                            System.out.println("USBeaconConnection.MSG_HAS_UPDATE-2");
-                            Toast.makeText(MenuActivity.this, "HAS_UPDATE.", Toast.LENGTH_SHORT).show();
-                            break;
-
-                        case USBeaconConnection.MSG_HAS_NO_UPDATE:
-                            Toast.makeText(MenuActivity.this, "No new BeaconList.", Toast.LENGTH_SHORT).show();
-                            break;
-
-                        case USBeaconConnection.MSG_DOWNLOAD_FINISHED:
-                            break;
-
-                        case USBeaconConnection.MSG_DOWNLOAD_FAILED:
-                            Toast.makeText(MenuActivity.this, "Download file failed!", Toast.LENGTH_SHORT).show();
-                            break;
-
-                        case USBeaconConnection.MSG_DATA_UPDATE_FAILED:
-                            Toast.makeText(MenuActivity.this, "UPDATE_FAILED!", Toast.LENGTH_SHORT).show();
-                            break;
-                    }
-                    break;
             }
         }
     };

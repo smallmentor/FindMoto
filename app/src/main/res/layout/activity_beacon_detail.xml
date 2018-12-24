@@ -29,7 +29,8 @@
         android:layout_marginTop="10dp"
         android:text="距　　離:"
         android:textColor="@color/colorTitleText"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:visibility="invisible" />
 
     <TextView
         android:id="@+id/tV_dist"
@@ -41,7 +42,8 @@
         android:layout_marginTop="11dp"
         android:text="約2.5(米)"
         android:textColor="@color/colorTitleText"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:visibility="invisible" />
 
     <TextView
         android:id="@+id/tV_mac"
