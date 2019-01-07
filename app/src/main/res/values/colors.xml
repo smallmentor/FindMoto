@@ -13,5 +13,6 @@
     <color name="colorDarkPrimary">#2b85e4</color>
     <color name="colorPrimary">#2d8cf0</color>
     <color name="colorLightPrimary">#5cadff</color>
+    <color name="colorInfo">#2db7f5</color>
 
 </resources>

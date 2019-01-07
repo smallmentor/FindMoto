@@ -123,6 +123,14 @@ public class BeaconDetailActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             db.delete("test", "_id=?", new String[]{String.valueOf(getId)});
+                            //檢查刪除的是不是defaul
+                            if(defaul.equals("true")) {
+                                cursor.moveToFirst();
+                                String firstId = cursor.getString(0);
+                                ContentValues cv = new ContentValues();
+                                cv.put("defaul", "true");
+                                db.update("test", cv, "_id=?", new String[]{String.valueOf(firstId)});
+                            }
                             finish();
                         }
                     })
@@ -161,7 +169,8 @@ public class BeaconDetailActivity extends AppCompatActivity {
                         .setTitle("更改錯誤")
                         .setMessage("裝置描述不可超過30個字元！")
                         .setPositiveButton("確定",null)
-                        .show()//改選項顏色
+                        .show()
+                        //改選項顏色
                         .getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(BeaconDetailActivity.this,R.color.colorPrimary));
             }else{
                 ContentValues cv = new ContentValues();
@@ -173,7 +182,8 @@ public class BeaconDetailActivity extends AppCompatActivity {
                         .setTitle("更改成功")
                         .setMessage("您的裝置訊息已成功更改")
                         .setPositiveButton("確定",null)
-                        .show()//改選項顏色
+                        .show()
+                        //改選項顏色
                         .getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(BeaconDetailActivity.this,R.color.colorPrimary));
 
                 backToDetail();

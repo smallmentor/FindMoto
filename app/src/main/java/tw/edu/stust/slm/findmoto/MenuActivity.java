@@ -189,7 +189,6 @@ public class MenuActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Cursor cursor = db.rawQuery("select * from test ", null);
-
                 Intent it = new Intent();
 
                 for(int i=0;i<cursor.getCount();i++) {
@@ -297,7 +296,6 @@ public class MenuActivity extends AppCompatActivity
     private void showData() {
         Cursor cursor = db.rawQuery("select * from test ", null);
         listAdapter = new BLEListAdapter(this,cursor);
-
         beacon_List.setAdapter(listAdapter);
         listAdapter.notifyDataSetChanged();
     }
