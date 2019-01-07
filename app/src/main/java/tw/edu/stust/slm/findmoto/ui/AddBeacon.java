@@ -38,6 +38,8 @@ import com.THLight.USBeacon.App.Lib.USBeaconData;
 import com.THLight.USBeacon.App.Lib.USBeaconList;
 import com.THLight.USBeacon.App.Lib.iBeaconData;
 import com.THLight.USBeacon.App.Lib.iBeaconScanManager;
+
+import tw.edu.stust.slm.findmoto.CorrectionActivity;
 import tw.edu.stust.slm.findmoto.R;
 import tw.edu.stust.slm.findmoto.ScanediBeacon;
 import tw.edu.stust.slm.findmoto.THLApp;
@@ -255,8 +257,8 @@ public class AddBeacon extends Activity implements iBeaconScanManager.OniBeaconS
             TextView tV_mac = view.findViewById(R.id.tV_mac);
             String name = "";
             String detail = "";
-
-			cv.put("mac", tV_mac.getText().toString());
+			final String mac = tV_mac.getText().toString();
+			cv.put("mac", mac);
 
 			//檢查輸入規則
 			final EditText et = new EditText(AddBeacon.this);
@@ -264,16 +266,16 @@ public class AddBeacon extends Activity implements iBeaconScanManager.OniBeaconS
 					.setView(et)
 					.setPositiveButton("確定", new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
-							String input = et.getText().toString();
+							final String name = et.getText().toString();
 							Log.d("命名裝置","if前");
-							if ("".equals(input)) {
+							if ("".equals(name)) {
 								Toast.makeText(getApplicationContext(), "內容不能為空！", Toast.LENGTH_LONG).show();
 							}
-							else if(input.length()>8){
+							else if(name.length()>8){
 								Toast.makeText(getApplicationContext(), "請勿超過8個字元！", Toast.LENGTH_LONG).show();
 							}
 							else {
-								cv.put("name", input);
+								cv.put("name", name);
 								final EditText et = new EditText(AddBeacon.this);
 								new AlertDialog.Builder(AddBeacon.this).setTitle("輸入描述(請勿超過30個字元)")
 										.setView(et)
@@ -304,6 +306,12 @@ public class AddBeacon extends Activity implements iBeaconScanManager.OniBeaconS
 													//設新增的為預設裝置
 													db.insert("test", null, cv);
 													cv.clear();
+
+													Intent it = new Intent();
+													it.putExtra("name",name);
+													it.putExtra("mac",mac);
+													it.setClass(AddBeacon.this,CorrectionActivity.class);
+													startActivity(it);
 													finish();
 												}
 											}
